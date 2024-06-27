@@ -10,12 +10,14 @@ function App() {
   return (
     <Router>
       <Header />
+      <div className="main-content">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
         {/* Define other routes here */}
         <Route path="/" element={<div><h2>Home Page</h2></div>} />
       </Routes>
+      </div>
       <Footer/>
     </Router>
   );

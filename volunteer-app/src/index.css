@@ -111,7 +111,7 @@ button:focus-visible {
 }
 
 .login-container div {
-  color: red;
+  color: rgb(59, 17, 209);
   margin-top: 5px;
 }
 
@@ -164,4 +164,62 @@ button:focus-visible {
 .registration-container div {
   color: rgb(76, 0, 255);
   margin-top: 5px;
+}
+
+/* src/Header.css */
+.header {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it stays on top of other elements */
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.nav {
+  flex-grow: 1;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none; /* Remove underline */
+  font-size: 1em;
+  transition: color 0.3s;
+}
+
+.nav-item a:hover {
+  color: #ddd;
+}
+
+/* src/App.css */
+.main-content {
+  padding-top: 70px; /* Adjust this value based on the height of your header */
 }
