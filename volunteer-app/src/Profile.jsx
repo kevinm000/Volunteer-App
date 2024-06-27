@@ -133,9 +133,21 @@ const Profile = () => {
         <div>
           <label htmlFor="skills">Skills</label>
           <select id="skills" multiple {...profileForm.getFieldProps('skills')}>
-            <option value="skill1">Skill 1</option>
-            <option value="skill2">Skill 2</option>
-            <option value="skill3">Skill 3</option>
+          <option value="Communication">Communication</option>
+  <option value="Teamwork">Teamwork</option>
+  <option value="Problem Solving">Problem Solving</option>
+  <option value="Leadership">Leadership</option>
+  <option value="Time Management">Time Management</option>
+  <option value="Adaptability">Adaptability</option>
+  <option value="Empathy">Empathy</option>
+  <option value="Conflict Resolution">Conflict Resolution</option>
+  <option value="Decision Making">Decision Making</option>
+  <option value="Creativity">Creativity</option>
+  <option value="Critical Thinking">Critical Thinking</option>
+  <option value="Flexibility">Flexibility</option>
+  <option value="Patience">Patience</option>
+  <option value="Negotiation">Negotiation</option>
+  <option value="Networking">Networking</option>
             {/* Add more skills options as needed */}
           </select>
           {profileForm.touched.skills && profileForm.errors.skills ? (
