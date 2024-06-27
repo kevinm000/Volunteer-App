@@ -5,6 +5,7 @@ import Header from './Header';
 import Login from './Login';
 import Registration from './Registration';
 import Footer from './Footer';
+import Profile from './Profile';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
+        <Route path="/profile" element={<Profile />} />
         {/* Define other routes here */}
         <Route path="/" element={<div><h2>Home Page</h2></div>} />
       </Routes>
