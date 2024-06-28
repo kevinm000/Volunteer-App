@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faCircle } from '@fortawesome/free-solid-svg-icons';
 import './index.css';
 
 const Notifications = () => {
@@ -9,17 +9,30 @@ const Notifications = () => {
     { id: 2, message: 'Event details updated.' },
     { id: 3, message: 'Reminder: Event starting soon.' },
   ]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isBellClicked, setIsBellClicked] = useState(false);
+  const [hasNewNotifications, setHasNewNotifications] = useState(notifications.length > 0);
+  const [showNotifications, setShowNotifications] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const handleBellClick = () => {
+    setIsBellClicked(true);
+    setHasNewNotifications(false);
+    setShowNotifications(!showNotifications);
   };
+
+  useEffect(() => {
+    if (isBellClicked) {
+      setHasNewNotifications(false);
+    }
+  }, [isBellClicked]);
 
   return (
     <div className="notification-bell">
-      <FontAwesomeIcon icon={faBell} className="bell-icon" onClick={toggleDropdown} />
-      {isOpen && (
-        <div className="dropdown">
+      <div className="bell-icon-container" onClick={handleBellClick}>
+        <FontAwesomeIcon icon={faBell} className="bell-icon" />
+        {hasNewNotifications && <FontAwesomeIcon icon={faCircle} className="new-notification-icon" />}
+      </div>
+      {showNotifications && (
+        <div className="notifications-popup">
           {notifications.length > 0 ? (
             notifications.map(notification => (
               <div key={notification.id} className="notification-item">
