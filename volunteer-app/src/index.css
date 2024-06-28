@@ -25,7 +25,8 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;   /* Center horizontally */
+  align-items: center;       /* Center vertically */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -69,7 +70,6 @@ button:focus-visible {
 
 .login-container {
   width: 300px;
-  margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -114,6 +114,7 @@ button:focus-visible {
   color: rgb(59, 17, 209);
   margin-top: 5px;
 }
+
 
 /* src/Registration.css */
 .registration-container {
