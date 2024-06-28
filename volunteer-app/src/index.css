@@ -25,10 +25,15 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  justify-content: center;   /* Center horizontally */
-  align-items: center;       /* Center vertically */
+  justify-content: center;
+  align-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-image: url('C:\Users\K\Documents\GitHub\Volunteer-App\volunteer-app\public\sonic_r_wallpapers_by_seagullmoe_dfyp0rz-fullview.jpg'); /* Replace with your image path or URL */
+  background-size: cover; /* Make the image cover the whole background */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-position: center; /* Center the image */
+  background-attachment: fixed;
 }
 
 h1 {
@@ -111,7 +116,7 @@ button:focus-visible {
 }
 
 .login-container div {
-  color: rgb(59, 17, 209);
+  color: #0068e0;
   margin-top: 5px;
 }
 
@@ -163,7 +168,7 @@ button:focus-visible {
 }
 
 .registration-container div {
-  color: rgb(76, 0, 255);
+  color: #0068e0;
   margin-top: 5px;
 }
 
@@ -269,7 +274,7 @@ button:focus-visible {
 .form-label {
   display: block;
   font-size: 1rem;
-  color: #4a00e0;
+  color: #0068e0;
   margin-bottom: 0.5rem;
   text-align: left;
 }
@@ -279,8 +284,8 @@ button:focus-visible {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: rgb(249, 246, 246);
-  color: #fff;
+  background-color: #fff;
+  color: #000000;
 }
 
 .form-input:focus {

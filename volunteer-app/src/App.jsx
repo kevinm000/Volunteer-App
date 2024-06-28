@@ -25,7 +25,6 @@ function App() {
         <Route path="/event-management" element={<EventManage />} />
         <Route path="/notifications" element={<Notifications />} />
         
-       
 
 
       </Routes>
