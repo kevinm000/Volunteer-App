@@ -384,3 +384,18 @@ body {
   color: #007bff; /* Replace with the hex code for "handgloves" color */
 }
 
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+/* src/Slideshow.css */
+.slideshow {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.slide-image {
+  width: 100%;
+  height: auto;
+}
+
+
