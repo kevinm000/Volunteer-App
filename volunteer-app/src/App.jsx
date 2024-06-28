@@ -25,7 +25,7 @@ function App() {
         
         <Route path="/" element={<div><h2>The Volunteer</h2></div>} />
 
-        
+
       </Routes>
       </div>
       <Footer/>

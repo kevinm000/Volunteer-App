@@ -170,7 +170,7 @@ button:focus-visible {
 /* src/Header.css */
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #333;
@@ -196,7 +196,9 @@ button:focus-visible {
 }
 
 .logo {
+  font-family: 'Space Mono', monospace;
   font-size: 1.5em;
+  color: #007bff; /* Replace with the hex code for "handgloves" color */
   margin: 0;
 }
 
@@ -232,6 +234,7 @@ button:focus-visible {
   align-items: center;
   margin-left: auto;
 }
+
 
 
 /* src/App.css */
@@ -276,7 +279,7 @@ button:focus-visible {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #000;
+  background-color: rgb(249, 246, 246);
   color: #fff;
 }
 
@@ -354,3 +357,30 @@ button:focus-visible {
 .notification-item:hover {
   background-color: #444;
 }
+
+
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+/* src/Home.css */
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.home-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 4em;
+  color: #007bff; /* Replace with the hex code for "handgloves" color */
+}
+
