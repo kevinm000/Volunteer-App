@@ -8,7 +8,7 @@ function Header() {
       <header className="header">
         <div className="header-content">
           <div className="header-left">
-            <h1 className="logo">Volunteer App</h1>
+            <h1 className="logo">The Volunteer&trade;</h1>
           </div>
           <nav className="nav">
             <ul className="nav-list">

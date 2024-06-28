@@ -23,7 +23,7 @@ function App() {
         <Route path="/event-management" element={<EventManage />} />
         <Route path="/notifications" element={<Notifications />} />
         
-        <Route path="/" element={<div><h2>The Volunteer</h2></div>} />
+        <Route path="/" element={<div><h2>The Volunteer&trade;</h2></div>} />
 
         
       </Routes>
