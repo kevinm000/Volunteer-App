@@ -28,7 +28,7 @@ body {
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #00c8ff, #052b58); /* Blue gradient */
+  background: linear-gradient(135deg, #182d4a12, #031b39); /* Blue gradient */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -389,21 +389,9 @@ body {
 .home-title {
   font-family: 'Space Mono', monospace;
   font-size: 4em;
-  color: #007bff; /* Replace with the hex code for "handgloves" color */
+  color: #98c7f8; /* Replace with the hex code for "handgloves" color */
 }
 
-@import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css";
 
-/* src/Slideshow.css */
-.slideshow {
-  width: 80%;
-  margin: 0 auto;
-}
-
-.slide-image {
-  width: 100%;
-  height: auto;
-}
 
 
