@@ -4,7 +4,7 @@ import './index.css';
 function Home() {
   return (
     <div className="home">
-      <h1 className="home-title">The Volunteer</h1>
+      <h1 className="home-title">The Volunteer&trade;</h1>
     </div>
   );
 }
