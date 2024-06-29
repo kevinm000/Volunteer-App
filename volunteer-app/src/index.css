@@ -264,7 +264,7 @@ button:focus-visible {
 .form-title {
   font-size: 1.5rem;
   color: #fff;
-  background: -webkit-linear-gradient(#eee, #333);
+  background: -webkit-linear-gradient(#242424, #242424);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1.5rem;
@@ -394,4 +394,43 @@ body {
 
 
 
+/* src/components/VolunteerMatching.css */
+.volunteer-matching-container {
+  width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
 
+.form-title {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 1rem;
+  color: #4a00e0;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-input:focus {
+  border-color: #4a00e0;
+  outline: none;
+}

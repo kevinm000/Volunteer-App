@@ -8,6 +8,7 @@ import Registration from './Registration';
 import Footer from './Footer';
 import Profile from './Profile';
 import EventManage from './EventManage';
+import VolunteerMatching from './VolunteerMatching';
 import Notifications from './Notifications';
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         {/* Define other routes here */}
         <Route path="/event-management" element={<EventManage />} />
+        <Route path="/volunteer-matching" element={<VolunteerMatching />} />
         <Route path="/notifications" element={<Notifications />} />
         
 
