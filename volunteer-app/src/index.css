@@ -2,7 +2,6 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
@@ -29,7 +28,7 @@ body {
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url('C:\Users\K\Documents\GitHub\Volunteer-App\volunteer-app\public\sonic_r_wallpapers_by_seagullmoe_dfyp0rz-fullview.jpg'); /* Replace with your image path or URL */
+  /*background-image: url('C:\Users\K\Documents\GitHub\Volunteer-App\volunteer-app\public\sonic_r_wallpapers_by_seagullmoe_dfyp0rz-fullview.jpg'); Replace with your image path or URL */
   background-size: cover; /* Make the image cover the whole background */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   background-position: center; /* Center the image */
@@ -84,6 +83,7 @@ button:focus-visible {
 .login-container h2 {
   text-align: center;
   margin-bottom: 20px;
+  color:#242424
 }
 
 .login-container form div {
@@ -134,6 +134,7 @@ button:focus-visible {
 .registration-container h2 {
   text-align: center;
   margin-bottom: 20px;
+  color:#242424
 }
 
 .registration-container form div {
@@ -289,7 +290,7 @@ button:focus-visible {
 }
 
 .form-input:focus {
-  border-color: #4a00e0;
+  border-color: #0c0c0c;
   outline: none;
 }
 
