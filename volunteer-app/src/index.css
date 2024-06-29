@@ -392,7 +392,15 @@ body {
   color: #98c7f8; /* Replace with the hex code for "handgloves" color */
 }
 
+.volunteer-history-container {
+  padding: 20px;
+}
 
+.volunteer-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
 
 /* src/components/VolunteerMatching.css */
 .volunteer-matching-container {
@@ -433,4 +441,13 @@ body {
 .form-input:focus {
   border-color: #4a00e0;
   outline: none;
+}
+.volunteer-history-table th, .volunteer-history-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.volunteer-history-table th {
+  background-color: #f2f2f25e;
+  text-align: left;
 }
