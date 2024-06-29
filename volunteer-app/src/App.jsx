@@ -9,6 +9,7 @@ import Footer from './Footer';
 import Profile from './Profile';
 import EventManage from './EventManage';
 import Notifications from './Notifications';
+import VolunteerHistory from './VolunteerHistory';
 
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
         {/* Define other routes here */}
         <Route path="/event-management" element={<EventManage />} />
         <Route path="/notifications" element={<Notifications />} />
-        
+        <Route path="/volunteer-history" element={<VolunteerHistory />} />
 
 
       </Routes>
