@@ -28,16 +28,18 @@ body {
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
-  /*background-image: url('C:\Users\K\Documents\GitHub\Volunteer-App\volunteer-app\public\sonic_r_wallpapers_by_seagullmoe_dfyp0rz-fullview.jpg'); Replace with your image path or URL */
-  background-size: cover; /* Make the image cover the whole background */
-  background-repeat: no-repeat; /* Prevent the image from repeating */
-  background-position: center; /* Center the image */
-  background-attachment: fixed;
+  background: linear-gradient(135deg, #00c8ff, #052b58); /* Blue gradient */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #fff;
 }
 
 button {
@@ -204,7 +206,7 @@ button:focus-visible {
 .logo {
   font-family: 'Space Mono', monospace;
   font-size: 1.5em;
-  color: #007bff; /* Replace with the hex code for "handgloves" color */
+  color: #98c7f8; /* Replace with the hex code for "handgloves" color */
   margin: 0;
 }
 
