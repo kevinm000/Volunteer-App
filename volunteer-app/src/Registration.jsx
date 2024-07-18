@@ -2,6 +2,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 const Registration = () => {
   const registrationForm = useFormik({
@@ -31,8 +32,13 @@ const Registration = () => {
       preferences: Yup.string(),
       availability: Yup.array().min(1, 'At least one date is required').required('Required')
     }),
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async values => {
+      try {
+        const response = await axios.post('http://localhost:5000/api/auth/register', values);
+        alert('Registration successful: ' + JSON.stringify(response.data));
+      } catch (error) {
+        alert('Registration failed: ' + error.response.data.message);
+      }
     }
   });
 

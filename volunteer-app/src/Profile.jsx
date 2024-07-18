@@ -1,21 +1,45 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 const Profile = () => {
+  const [initialValues, setInitialValues] = useState({
+    fullName: 'John Doe',
+    address1: '123 Main St',
+    address2: '',
+    city: 'Anytown',
+    state: 'CA',
+    zipCode: '12345',
+    skills: ['Communication', 'Teamwork'],
+    preferences: 'Remote work preferred',
+    availability: ['2024-07-20', '2024-07-21']
+  });
+
+  useEffect(() => {
+    // Simulate fetching user profile data from backend
+    const fetchProfile = async () => {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Set the initial values (these would normally come from the backend)
+      setInitialValues({
+        fullName: 'John Doe',
+        address1: '123 Main St',
+        address2: '4300 University Dr',
+        city: 'Houston',
+        state: 'TX',
+        zipCode: '12345',
+        skills: ['Communication', 'Teamwork'],
+        preferences: 'Remote work preferred',
+        availability: ['2024-07-20', '2024-07-21']
+      });
+    };
+
+    fetchProfile();
+  }, []);
+
   const profileForm = useFormik({
-    initialValues: {
-      fullName: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      skills: [],
-      preferences: '',
-      availability: []
-    },
+    enableReinitialize: true,
+    initialValues,
     validationSchema: Yup.object({
       fullName: Yup.string().max(50, 'Must be 50 characters or less').required('Required'),
       address1: Yup.string().max(100, 'Must be 100 characters or less').required('Required'),
@@ -28,7 +52,10 @@ const Profile = () => {
       availability: Yup.array().min(1, 'At least one date is required').required('Required')
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      // Simulate updating profile data
+      setTimeout(() => {
+        alert('Profile updated successfully: ' + JSON.stringify(values, null, 2));
+      }, 500);
     }
   });
 
