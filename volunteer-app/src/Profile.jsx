@@ -1,41 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
-const Profile = () => {
+const Profile = ({ userId }) => {
   const [initialValues, setInitialValues] = useState({
-    fullName: 'John Doe',
-    address1: '123 Main St',
+    fullName: '',
+    address1: '',
     address2: '',
-    city: 'Anytown',
-    state: 'CA',
-    zipCode: '12345',
-    skills: ['Communication', 'Teamwork'],
-    preferences: 'Remote work preferred',
-    availability: ['2024-07-20', '2024-07-21']
+    city: '',
+    state: '',
+    zipCode: '',
+    skills: [],
+    preferences: '',
+    availability: []
   });
 
   useEffect(() => {
-    // Simulate fetching user profile data from backend
-    const fetchProfile = async () => {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // Set the initial values (these would normally come from the backend)
-      setInitialValues({
-        fullName: 'John Doe',
-        address1: '123 Main St',
-        address2: '4300 University Dr',
-        city: 'Houston',
-        state: 'TX',
-        zipCode: '12345',
-        skills: ['Communication', 'Teamwork'],
-        preferences: 'Remote work preferred',
-        availability: ['2024-07-20', '2024-07-21']
-      });
-    };
-
-    fetchProfile();
-  }, []);
+    // Fetch user profile data from backend
+    axios.get(`http://localhost:5000/api/profile/${userId}`)
+      .then(response => setInitialValues(response.data))
+      .catch(error => console.error('Error fetching profile:', error));
+  }, [userId]);
 
   const profileForm = useFormik({
     enableReinitialize: true,
@@ -51,11 +37,13 @@ const Profile = () => {
       preferences: Yup.string(),
       availability: Yup.array().min(1, 'At least one date is required').required('Required')
     }),
-    onSubmit: values => {
-      // Simulate updating profile data
-      setTimeout(() => {
-        alert('Profile updated successfully: ' + JSON.stringify(values, null, 2));
-      }, 500);
+    onSubmit: async values => {
+      try {
+        const response = await axios.put(`http://localhost:5000/api/profile/${userId}`, values);
+        alert('Profile updated successfully: ' + JSON.stringify(response.data));
+      } catch (error) {
+        alert('Profile update failed: ' + error.response.data.message);
+      }
     }
   });
 

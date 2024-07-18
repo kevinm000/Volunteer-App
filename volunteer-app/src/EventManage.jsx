@@ -1,5 +1,5 @@
-// src/EventManage.jsx
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 
 const EventManage = () => {
@@ -13,12 +13,24 @@ const EventManage = () => {
   });
 
   const skillsOptions = [
-    'Skill 1', 'Skill 2', 'Skill 3', 'Skill 4', 'Skill 5'
+    'Communication', 'Teamwork', 'Problem Solving', 'Leadership', 'Time Management'
   ];
 
   const urgencyOptions = [
     'Low', 'Medium', 'High'
   ];
+
+  useEffect(() => {
+    // Fetch existing events data from backend
+    axios.get('http://localhost:5000/events')
+      .then(response => {
+        const event = response.data[0]; // Assuming we take the first event for demo
+        if (event) {
+          setFormData(event);
+        }
+      })
+      .catch(error => console.error('Error fetching events:', error));
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,9 +56,15 @@ const EventManage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission, e.g., send the data to the server or update the state
-    console.log(formData);
+    // Send form data to backend
+    axios.post('http://localhost:5000/events', formData)
+      .then(response => {
+        alert('Event created successfully');
+        console.log(response.data);
+      })
+      .catch(error => console.error('Error creating event:', error));
   };
+
 
   return (
     <div className="form-container">
