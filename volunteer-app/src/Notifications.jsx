@@ -1,18 +1,55 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCircle } from '@fortawesome/free-solid-svg-icons';
+import io from 'socket.io-client';
 import './index.css';
 
+const socket = io('http://localhost:3000');
+
 const Notifications = () => {
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: 'New event assigned to you.', isNew: true },
-    { id: 2, message: 'Event details updated.', isNew: true },
-    { id: 3, message: 'Reminder: Event starting soon.', isNew: true },
-    { id: 4, message: 'Event registration deadline approaching.', isNew: false },
-    { id: 5, message: 'You have been unassigned from an event.', isNew: false },
-  ]);
+  const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    fetchNotifications();
+
+    socket.on('new-notification', (notification) => {
+      setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+    });
+
+    return () => {
+      socket.off('new-notification');
+    };
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/notifications');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setNotifications(data);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const deleteNotification = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/notifications/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setNotifications(prevNotifications => prevNotifications.filter(notification => notification.id !== id));
+      } else {
+        console.error('Failed to delete notification');
+      }
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  };
 
   const handleBellClick = () => {
     setShowNotifications(!showNotifications);
@@ -26,8 +63,8 @@ const Notifications = () => {
   };
 
   const acknowledgeNotifications = () => {
-    setNotifications(prevNotifications =>
-      prevNotifications.map(notification => ({ ...notification, isNew: false }))
+    setNotifications((prevNotifications) =>
+      prevNotifications.map((notification) => ({ ...notification, isNew: false }))
     );
   };
 
@@ -38,7 +75,7 @@ const Notifications = () => {
     };
   }, []);
 
-  const newNotifications = notifications.filter(notification => notification.isNew);
+  const newNotifications = notifications.filter((notification) => notification.isNew);
 
   return (
     <div className="notification-bell" ref={dropdownRef}>
@@ -49,9 +86,10 @@ const Notifications = () => {
       {showNotifications && (
         <div className="notifications-popup">
           {notifications.length > 0 ? (
-            notifications.map(notification => (
+            notifications.map((notification) => (
               <div key={notification.id} className="notification-item">
                 {notification.message}
+                <button onClick={() => deleteNotification(notification.id)}>Delete</button>
               </div>
             ))
           ) : (

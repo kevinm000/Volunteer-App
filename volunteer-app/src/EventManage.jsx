@@ -22,7 +22,7 @@ const EventManage = () => {
 
   useEffect(() => {
     // Fetch existing events data from backend
-    axios.get('http://localhost:5000/events')
+    axios.get('http://localhost:3000/events')
       .then(response => {
         const event = response.data[0]; // Assuming we take the first event for demo
         if (event) {
