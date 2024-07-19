@@ -11,6 +11,7 @@ const EventManage = () => {
     urgency: '',
     eventDate: '',
   });
+  const [events, setEvents] = useState([]);
 
   const skillsOptions = [
     'Communication', 'Teamwork', 'Problem Solving', 'Leadership', 'Time Management'
@@ -21,16 +22,17 @@ const EventManage = () => {
   ];
 
   useEffect(() => {
-    // Fetch existing events data from backend
-    axios.get('http://localhost:3000/events')
-      .then(response => {
-        const event = response.data[0]; // Assuming we take the first event for demo
-        if (event) {
-          setFormData(event);
-        }
-      })
-      .catch(error => console.error('Error fetching events:', error));
+    fetchEvents();
   }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/events');
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,17 +56,33 @@ const EventManage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Send form data to backend
-    axios.post('http://localhost:5000/events', formData)
-      .then(response => {
-        alert('Event created successfully');
-        console.log(response.data);
-      })
-      .catch(error => console.error('Error creating event:', error));
+    try {
+      const response = await axios.post('http://localhost:3000/api/events', formData);
+      alert('Event created successfully');
+      setEvents([...events, response.data]);
+      setFormData({
+        eventName: '',
+        eventDescription: '',
+        location: '',
+        requiredSkills: [],
+        urgency: '',
+        eventDate: '',
+      });
+    } catch (error) {
+      console.error('Error creating event:', error);
+    }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/events/${id}`);
+      setEvents(events.filter(event => event.id !== id));
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+  };
 
   return (
     <div className="form-container">
@@ -155,6 +173,20 @@ const EventManage = () => {
         </div>
         <button type="submit" className="form-button">Create Event</button>
       </form>
+      <h2 className="form-title">Existing Events</h2>
+      <ul className="event-list">
+        {events.map((event) => (
+          <li key={event.id} className="event-item">
+            <h3>{event.eventName}</h3>
+            <p>{event.eventDescription}</p>
+            <p>{event.location}</p>
+            <p>{event.requiredSkills.join(', ')}</p>
+            <p>{event.urgency}</p>
+            <p>{event.eventDate}</p>
+            <button onClick={() => handleDelete(event.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 // src/tests/notiRoutes.test.js
 
 // Print the current directory
-console.log('Current directory:', __dirname);
+//console.log('Current directory:', __dirname);
 
 const path = require('path');
 const request = require('supertest');

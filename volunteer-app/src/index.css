@@ -263,7 +263,7 @@ button:focus-visible {
 
 .form-title {
   font-size: 1.5rem;
-  color: #fff;
+  color: rgb(255, 255, 255);
   background: -webkit-linear-gradient(#242424, #242424);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -309,6 +309,29 @@ button:focus-visible {
 
 .form-button:hover {
   background-color: #0056b3;
+}
+
+.event-list {
+  color: #000; /* Change this to any color you prefer */
+  font-size: 16px; /* Adjust font size if needed */
+}
+
+.event-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.event-item h3 {
+  color: #333; /* Change this to any color you prefer */
+  font-size: 20px;
+}
+
+.event-item p {
+  color: #555; /* Change this to any color you prefer */
+  font-size: 14px;
 }
 
 /* src/Notifications.css */
