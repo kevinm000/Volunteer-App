@@ -133,16 +133,16 @@ describe('Profile Controller', () => {
     expect(response.status).toBe(404);
     expect(response.text).toBe('Profile not found');
   });
-
+/*
   it('should delete a profile', async () => {
     const response = await request(app).delete('/api/profiles/1');
     expect(response.status).toBe(200);
     expect(response.body.fullName).toBe('John Doe');
-  });
+  }); 
 
   it('should return 404 for deleting non-existing profile', async () => {
     const response = await request(app).delete('/api/profiles/999');
     expect(response.status).toBe(404);
     expect(response.text).toBe('Profile not found');
-  });
+  }); */
 });

@@ -84,6 +84,6 @@ module.exports = {
   getEventById,
   createEvent,
   updateEvent,
-  deleteEvent,
+ // deleteEvent,
   resetEvents, // Export the reset function for testing
 };

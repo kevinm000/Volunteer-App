@@ -80,7 +80,7 @@ const updateProfile = (req, res) => {
 
   res.json(profile);
 };
-
+/*
 const deleteProfile = (req, res) => {
   const profileIndex = profiles.findIndex(p => p.id === parseInt(req.params.id));
   if (profileIndex === -1) return res.status(404).send('Profile not found');
@@ -88,7 +88,7 @@ const deleteProfile = (req, res) => {
   const deletedProfile = profiles.splice(profileIndex, 1)[0];
   res.json(deletedProfile);
 };
-
+ */
 const resetProfiles = (newProfiles) => {
   profiles.length = 0;
   profiles.push(...newProfiles);
@@ -99,7 +99,7 @@ module.exports = {
   getProfileById,
   createProfile,
   updateProfile,
-  deleteProfile,
+  //deleteProfile,
   resetProfiles, // Export reset function for testing
   profiles,
 };
