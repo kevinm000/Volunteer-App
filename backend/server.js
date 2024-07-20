@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
-app.use('/api/events', eventRoutes);
+//app.use('/api/events', eventRoutes);
 
 const PORT = process.env.PORT || 5000;
 
