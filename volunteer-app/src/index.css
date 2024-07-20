@@ -1,0 +1,489 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #182d4a12, #031b39); /* Blue gradient */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: #fff;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #fff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.login-container {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color:#242424
+}
+
+.login-container form div {
+  margin-bottom: 15px;
+}
+
+.login-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-container button:hover {
+  background-color: #0056b3;
+}
+
+.login-container div {
+  color: #0068e0;
+  margin-top: 5px;
+}
+
+
+/* src/Registration.css */
+.registration-container {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.registration-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color:#242424
+}
+
+.registration-container form div {
+  margin-bottom: 15px;
+}
+
+.registration-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.registration-container input,
+.registration-container select,
+.registration-container textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.registration-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registration-container button:hover {
+  background-color: #0056b3;
+}
+
+.registration-container div {
+  color: #0068e0;
+  margin-top: 5px;
+}
+
+/* src/Header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5em;
+  color: #98c7f8; /* Replace with the hex code for "handgloves" color */
+  margin: 0;
+}
+
+.nav {
+  flex-grow: 1;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.3s;
+}
+
+.nav-item a:hover {
+  color: #ddd;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+
+
+/* src/App.css */
+.main-content {
+  padding-top: 70px; /* Adjust this value based on the height of your header */
+}
+
+/* src/EventManage.css */
+.form-container {
+  width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  color: #fff;
+  background: -webkit-linear-gradient(#242424, #242424);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 1rem;
+  color: #0068e0;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #000000;
+}
+
+.form-input:focus {
+  border-color: #0c0c0c;
+  outline: none;
+}
+
+.form-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}
+
+.event-list {
+  color: #000; /* Change this to any color you prefer */
+  font-size: 16px; /* Adjust font size if needed */
+}
+
+.event-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.event-item h3 {
+  color: #333; /* Change this to any color you prefer */
+  font-size: 20px;
+}
+
+.event-item p {
+  color: #555; /* Change this to any color you prefer */
+  font-size: 14px;
+}
+
+/* src/Notifications.css */
+.notification-bell {
+  position: relative;
+  display: inline-block;
+  margin-left: 1rem;
+  margin-right: 20px;
+}
+
+.bell-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bell-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+.new-notification-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.5rem;
+  color: red;
+}
+
+.notifications-popup {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  width: 300px;
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: left;
+  color: #fff;
+}
+
+.notification-item {
+  padding: 1rem;
+  border-bottom: 1px solid #444;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: #444;
+}
+
+
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+/* src/Home.css */
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.home-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 4em;
+  color: #98c7f8; /* Replace with the hex code for "handgloves" color */
+}
+
+.volunteer-history-container {
+  padding: 20px;
+}
+
+.volunteer-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+/* src/components/VolunteerMatching.css */
+.volunteer-matching-container {
+  width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 1rem;
+  color: #4a00e0;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-input:focus {
+  border-color: #4a00e0;
+  outline: none;
+}
+.volunteer-history-table th, .volunteer-history-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.volunteer-history-table th {
+  background-color: #f2f2f25e;
+  text-align: left;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
