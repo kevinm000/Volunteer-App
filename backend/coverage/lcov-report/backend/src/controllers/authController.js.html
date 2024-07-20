@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/18</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/16</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -92,72 +92,84 @@
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const users = [
-    { email: 'test@example.com', password: 'password123' }
-  ];
-  
-  const login = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-    const { email, password } = <span class="cstat-no" title="statement not covered" >req.body;</span>
-    const user = <span class="cstat-no" title="statement not covered" >users.find(<span class="fstat-no" title="function not covered" >us</span>er =&gt; <span class="cstat-no" title="statement not covered" >user.email === email &amp;&amp; user.password === password)</span>;</span>
-<span class="cstat-no" title="statement not covered" >    if (user) {</span>
-<span class="cstat-no" title="statement not covered" >      res.status(200).json({ message: 'Login successful', user });</span>
-    } else {
-<span class="cstat-no" title="statement not covered" >      res.status(401).json({ message: 'Invalid credentials' });</span>
-    }
-  };
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">let users = [
+  { email: 'test@example.com', password: 'password123' }
+];
 &nbsp;
-  const register = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-    const { email, password, fullName, address1, address2, city, state, zipCode, skills, preferences, availability } = <span class="cstat-no" title="statement not covered" >req.body;</span>
-  
-    const existingUser = <span class="cstat-no" title="statement not covered" >users.find(<span class="fstat-no" title="function not covered" >us</span>er =&gt; <span class="cstat-no" title="statement not covered" >user.email === email)</span>;</span>
-<span class="cstat-no" title="statement not covered" >    if (existingUser) {</span>
-<span class="cstat-no" title="statement not covered" >      return res.status(400).json({ message: 'Email already in use' });</span>
-    }
-  
-    const newUser = <span class="cstat-no" title="statement not covered" >{ email, password, fullName, address1, address2, city, state, zipCode, skills, preferences, availability };</span>
-<span class="cstat-no" title="statement not covered" >    users.push(newUser);</span>
-  
-<span class="cstat-no" title="statement not covered" >    res.status(201).json({ message: 'User registered successfully', user: newUser });</span>
-  };
-  
-  module.exports = { login, register };
-  </pre></td></tr></table></pre>
+const login = (req, res) =&gt; {
+  const { email, password } = req.body;
+  const user = users.find(user =&gt; user.email === email &amp;&amp; user.password === password);
+  if (user) {
+    res.status(200).json({ message: 'Login successful', user });
+  } else {
+    res.status(401).json({ message: 'Invalid credentials' });
+  }
+};
+&nbsp;
+const register = (req, res) =&gt; {
+  const { email, password, fullName, address1, address2, city, state, zipCode, skills, preferences, availability } = req.body;
+&nbsp;
+  const existingUser = users.find(user =&gt; user.email === email);
+  if (existingUser) {
+    return res.status(400).json({ message: 'Email already in use' });
+  }
+&nbsp;
+  const newUser = { email, password, fullName, address1, address2, city, state, zipCode, skills, preferences, availability };
+  users.push(newUser);
+&nbsp;
+  res.status(201).json({ message: 'User registered successfully', user: newUser });
+};
+&nbsp;
+const resetUsers = (newUsers) =&gt; {
+  users = newUsers;
+};
+&nbsp;
+module.exports = { login, register, resetUsers, users };
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-19T23:24:12.774Z
+                at 2024-07-20T01:42:47.270Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
