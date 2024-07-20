@@ -1,4 +1,4 @@
-let events = [
+const events = [
   {
     id: 1,
     eventName: 'Beach Cleanup',
@@ -70,12 +70,13 @@ const deleteEvent = (req, res) => {
   const eventIndex = events.findIndex(e => e.id === parseInt(req.params.id));
   if (eventIndex === -1) return res.status(404).send('Event not found');
 
-  const [deletedEvent] = events.splice(eventIndex, 1); // Destructure to get the deleted event
-  res.json(deletedEvent); // Return the deleted event
+  const deletedEvent = events.splice(eventIndex, 1)[0];
+  res.json(deletedEvent);
 };
 
 const resetEvents = (newEvents) => {
-  events = newEvents;
+  events.length = 0;
+  events.push(...newEvents);
 };
 
 module.exports = {
@@ -84,5 +85,5 @@ module.exports = {
   createEvent,
   updateEvent,
   deleteEvent,
-  resetEvents, // Export reset function for testing
+  resetEvents, // Export the reset function for testing
 };
