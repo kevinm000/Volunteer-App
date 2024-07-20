@@ -1,21 +1,31 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
-const Profile = () => {
+const Profile = ({ userId }) => {
+  const [initialValues, setInitialValues] = useState({
+    fullName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    skills: [],
+    preferences: '',
+    availability: []
+  });
+
+  useEffect(() => {
+    // Fetch user profile data from backend
+    axios.get(`http://localhost:5000/api/profile/${userId}`)
+      .then(response => setInitialValues(response.data))
+      .catch(error => console.error('Error fetching profile:', error));
+  }, [userId]);
+
   const profileForm = useFormik({
-    initialValues: {
-      fullName: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      skills: [],
-      preferences: '',
-      availability: []
-    },
+    enableReinitialize: true,
+    initialValues,
     validationSchema: Yup.object({
       fullName: Yup.string().max(50, 'Must be 50 characters or less').required('Required'),
       address1: Yup.string().max(100, 'Must be 100 characters or less').required('Required'),
@@ -27,8 +37,13 @@ const Profile = () => {
       preferences: Yup.string(),
       availability: Yup.array().min(1, 'At least one date is required').required('Required')
     }),
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async values => {
+      try {
+        const response = await axios.put(`http://localhost:5000/api/profile/${userId}`, values);
+        alert('Profile updated successfully: ' + JSON.stringify(response.data));
+      } catch (error) {
+        alert('Profile update failed: ' + error.response.data.message);
+      }
     }
   });
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 import './index.css';
 
 const Login = () => {
@@ -17,11 +18,16 @@ const Login = () => {
         .min(6, 'Password must be at least 6 characters')
         .required('Required')
     }),
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async values => {
+      try {
+        const response = await axios.post('http://localhost:5000/api/auth/login', values);
+        alert('Login successful: ' + JSON.stringify(response.data));
+      } catch (error) {
+        alert('Login failed: ' + error.response.data.message);
+      }
     }
   });
-
+  
   return (
     <div className="login-container">
       <h2>Login</h2>
