@@ -16,11 +16,12 @@
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dependencies": "^0.0.1",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "nodemon": "3.1.4",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.1.4",
-    "supertest": "^7.0.0"
+    "supertest": "7.0.0"
   }
 }

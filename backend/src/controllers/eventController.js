@@ -1,32 +1,33 @@
 const events = [
-    {
-      id: 1,
-      eventName: 'Beach Cleanup',
-      eventDescription: 'Join us for a beach cleanup event to help keep our beaches clean and beautiful.',
-      location: 'Santa Monica Beach, CA',
-      requiredSkills: ['Teamwork', 'Time Management'],
-      urgency: 'High',
-      eventDate: '2023-08-15',
-    },
-    {
-      id: 2,
-      eventName: 'Community Garden Planting',
-      eventDescription: 'Help us plant a new community garden and learn about sustainable gardening practices.',
-      location: 'Downtown Community Center, NY',
-      requiredSkills: ['Gardening', 'Teamwork', 'Creativity'],
-      urgency: 'Medium',
-      eventDate: '2023-09-20',
-    },
-    {
-      id: 3,
-      eventName: 'Food Drive',
-      eventDescription: 'Participate in our food drive to collect and distribute food to those in need.',
-      location: 'Local Food Bank, TX',
-      requiredSkills: ['Communication', 'Empathy'],
-      urgency: 'Low',
-      eventDate: '2023-10-10',
-    },
-  ];
+  {
+    id: 1,
+    eventName: 'Beach Cleanup',
+    eventDescription: 'Join us for a beach cleanup event to help keep our beaches clean and beautiful.',
+    location: 'Santa Monica Beach, CA',
+    requiredSkills: ['Teamwork', 'Time Management'],
+    urgency: 'High',
+    eventDate: '2023-08-15',
+  },
+  {
+    id: 2,
+    eventName: 'Community Garden Planting',
+    eventDescription: 'Help us plant a new community garden and learn about sustainable gardening practices.',
+    location: 'Downtown Community Center, NY',
+    requiredSkills: ['Gardening', 'Teamwork', 'Creativity'],
+    urgency: 'Medium',
+    eventDate: '2023-09-20',
+  },
+  {
+    id: 3,
+    eventName: 'Food Drive',
+    eventDescription: 'Participate in our food drive to collect and distribute food to those in need.',
+    location: 'Local Food Bank, TX',
+    requiredSkills: ['Communication', 'Empathy'],
+    urgency: 'Low',
+    eventDate: '2023-10-10',
+  },
+];
+
 const getAllEvents = (req, res) => {
   res.json(events);
 };
@@ -64,13 +65,18 @@ const updateEvent = (req, res) => {
 
   res.json(event);
 };
-
+/*
 const deleteEvent = (req, res) => {
   const eventIndex = events.findIndex(e => e.id === parseInt(req.params.id));
   if (eventIndex === -1) return res.status(404).send('Event not found');
 
-  const deletedEvent = events.splice(eventIndex, 1);
+  const deletedEvent = events.splice(eventIndex, 1)[0];
   res.json(deletedEvent);
+};
+ */
+const resetEvents = (newEvents) => {
+  events.length = 0;
+  events.push(...newEvents);
 };
 
 module.exports = {
@@ -78,5 +84,6 @@ module.exports = {
   getEventById,
   createEvent,
   updateEvent,
-  deleteEvent,
+ // deleteEvent,
+  resetEvents, // Export the reset function for testing
 };
