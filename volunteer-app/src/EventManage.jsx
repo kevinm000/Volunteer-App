@@ -78,7 +78,7 @@ const EventManage = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/events/${id}`);
-      setEvents(events.filter(event => event.id !== id));
+      setEvents(events.filter(event => event._id !== id));  // Assuming `_id` is used as ID
     } catch (error) {
       console.error('Error deleting event:', error);
     }
@@ -176,14 +176,14 @@ const EventManage = () => {
       <h2 className="form-title">Existing Events</h2>
       <ul className="event-list">
         {events.map((event) => (
-          <li key={event.id} className="event-item">
+          <li key={event._id} className="event-item">  {/* Use `_id` if that's what the backend provides */}
             <h3>{event.eventName}</h3>
             <p>{event.eventDescription}</p>
             <p>{event.location}</p>
             <p>{event.requiredSkills.join(', ')}</p>
             <p>{event.urgency}</p>
             <p>{event.eventDate}</p>
-            <button onClick={() => handleDelete(event.id)}>Delete</button>
+            <button onClick={() => handleDelete(event._id)}>Delete</button>
           </li>
         ))}
       </ul>
@@ -192,3 +192,4 @@ const EventManage = () => {
 };
 
 export default EventManage;
+

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">31.03% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/29</span>
+                <span class='fraction'>9/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">14.28% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>9/25</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -183,17 +183,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,22 +202,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -271,18 +271,18 @@
   },
 ];
 &nbsp;
-const getAllEvents = (req, res) =&gt; {
-  res.json(events);
+const getAllEvents = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >  res.json(events);</span>
 };
 &nbsp;
-const getEventById = (req, res) =&gt; {
-  const event = events.find(e =&gt; e.id === parseInt(req.params.id));
-  if (!event) return res.status(404).send('Event not found');
-  res.json(event);
+const getEventById = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  const event = <span class="cstat-no" title="statement not covered" >events.find(<span class="fstat-no" title="function not covered" >e </span>=&gt; <span class="cstat-no" title="statement not covered" >e.id === parseInt(req.params.id))</span>;</span>
+<span class="cstat-no" title="statement not covered" >  if (!event) <span class="cstat-no" title="statement not covered" >return res.status(404).send('Event not found');</span></span>
+<span class="cstat-no" title="statement not covered" >  res.json(event);</span>
 };
 &nbsp;
-const createEvent = (req, res) =&gt; {
-  const event = {
+const createEvent = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  const event = <span class="cstat-no" title="statement not covered" >{</span>
     id: events.length + 1,
     eventName: req.body.eventName,
     eventDescription: req.body.eventDescription,
@@ -291,22 +291,22 @@ const createEvent = (req, res) =&gt; {
     urgency: req.body.urgency,
     eventDate: req.body.eventDate,
   };
-  events.push(event);
-  res.status(201).json(event);
+<span class="cstat-no" title="statement not covered" >  events.push(event);</span>
+<span class="cstat-no" title="statement not covered" >  res.status(201).json(event);</span>
 };
 &nbsp;
-const updateEvent = (req, res) =&gt; {
-  const event = events.find(e =&gt; e.id === parseInt(req.params.id));
-  if (!event) return res.status(404).send('Event not found');
+const updateEvent = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  const event = <span class="cstat-no" title="statement not covered" >events.find(<span class="fstat-no" title="function not covered" >e </span>=&gt; <span class="cstat-no" title="statement not covered" >e.id === parseInt(req.params.id))</span>;</span>
+<span class="cstat-no" title="statement not covered" >  if (!event) <span class="cstat-no" title="statement not covered" >return res.status(404).send('Event not found');</span></span>
 &nbsp;
-  event.eventName = req.body.eventName;
-  event.eventDescription = req.body.eventDescription;
-  event.location = req.body.location;
-  event.requiredSkills = req.body.requiredSkills;
-  event.urgency = req.body.urgency;
-  event.eventDate = req.body.eventDate;
+<span class="cstat-no" title="statement not covered" >  event.eventName = req.body.eventName;</span>
+<span class="cstat-no" title="statement not covered" >  event.eventDescription = req.body.eventDescription;</span>
+<span class="cstat-no" title="statement not covered" >  event.location = req.body.location;</span>
+<span class="cstat-no" title="statement not covered" >  event.requiredSkills = req.body.requiredSkills;</span>
+<span class="cstat-no" title="statement not covered" >  event.urgency = req.body.urgency;</span>
+<span class="cstat-no" title="statement not covered" >  event.eventDate = req.body.eventDate;</span>
 &nbsp;
-  res.json(event);
+<span class="cstat-no" title="statement not covered" >  res.json(event);</span>
 };
 /*
 const deleteEvent = (req, res) =&gt; {
@@ -337,7 +337,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-20T04:58:49.481Z
+                at 2024-07-26T16:33:48.105Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
