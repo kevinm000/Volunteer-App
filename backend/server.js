@@ -1,8 +1,10 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
+require('dotenv').config();
 
 const authRoutes = require('./src/routes/auth');
 const profileRoutes = require('./src/routes/profile');
@@ -15,6 +17,20 @@ const io = socketIo(server);
 
 app.use(bodyParser.json());
 app.use(cors());
+
+const mongoURI = process.env.MONGODB_URI;
+
+if (!mongoURI) {
+  console.error('MONGODB_URI is not defined in .env file');
+  process.exit(1);
+}
+
+// Connect to MongoDB
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected...'))
+  .catch(err => console.log(err));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
