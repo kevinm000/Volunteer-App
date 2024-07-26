@@ -11,7 +11,7 @@ import EventManage from './EventManage';
 import VolunteerMatching from './VolunteerMatching';
 import Notifications from './Notifications';
 import VolunteerHistory from './VolunteerHistory';
-
+import ProfileManage from './profileManage';
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         {/* Define other routes here */}
         <Route path="/event-management" element={<EventManage />} />
+        <Route path="/profile-management" element={<ProfileManage />} />
         <Route path="/volunteer-matching" element={<VolunteerMatching />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/volunteer-history" element={<VolunteerHistory />} />

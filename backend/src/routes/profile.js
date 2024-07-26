@@ -6,6 +6,6 @@ router.get('/', profileController.getAllProfiles);
 router.get('/:id', profileController.getProfileById);
 router.post('/', profileController.createProfile);
 router.put('/:id', profileController.updateProfile);
-router.delete('/:id', profileController.deleteProfile);
+//router.delete('/:id', profileController.deleteProfile);
 
 module.exports = router;

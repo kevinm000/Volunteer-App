@@ -18,7 +18,7 @@ const Profile = ({ userId }) => {
 
   useEffect(() => {
     // Fetch user profile data from backend
-    axios.get(`http://localhost:5000/api/profile/${userId}`)
+    axios.get(`http://localhost:3000/api/profile/${userId}`)
       .then(response => setInitialValues(response.data))
       .catch(error => console.error('Error fetching profile:', error));
   }, [userId]);

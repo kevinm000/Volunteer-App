@@ -20,7 +20,7 @@ const Login = () => {
     }),
     onSubmit: async values => {
       try {
-        const response = await axios.post('http://localhost:5000/api/auth/login', values);
+        const response = await axios.post('http://localhost:3000/api/auth/login', values);
         alert('Login successful: ' + JSON.stringify(response.data));
       } catch (error) {
         alert('Login failed: ' + error.response.data.message);
