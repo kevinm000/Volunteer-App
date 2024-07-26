@@ -1,4 +1,4 @@
-const UserCredentials = require('../models/UserCredentials'); // Ensure this is your MongoDB model
+const UserCredentials = require('../models/UserCredentials');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 

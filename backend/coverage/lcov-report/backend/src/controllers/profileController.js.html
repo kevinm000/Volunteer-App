@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">28.12% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>32/32</span>
+                <span class='fraction'>9/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">14.28% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">32.14% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>9/28</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -208,17 +208,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -230,25 +230,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -312,18 +312,18 @@
   },
 ];
 &nbsp;
-const getAllProfiles = (req, res) =&gt; {
-  res.json(profiles);
+const getAllProfiles = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >  res.json(profiles);</span>
 };
 &nbsp;
-const getProfileById = (req, res) =&gt; {
-  const profile = profiles.find(p =&gt; p.id === parseInt(req.params.id));
-  if (!profile) return res.status(404).send('Profile not found');
-  res.json(profile);
+const getProfileById = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  const profile = <span class="cstat-no" title="statement not covered" >profiles.find(<span class="fstat-no" title="function not covered" >p </span>=&gt; <span class="cstat-no" title="statement not covered" >p.id === parseInt(req.params.id))</span>;</span>
+<span class="cstat-no" title="statement not covered" >  if (!profile) <span class="cstat-no" title="statement not covered" >return res.status(404).send('Profile not found');</span></span>
+<span class="cstat-no" title="statement not covered" >  res.json(profile);</span>
 };
 &nbsp;
-const createProfile = (req, res) =&gt; {
-  const profile = {
+const createProfile = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  const profile = <span class="cstat-no" title="statement not covered" >{</span>
     id: profiles.length + 1,
     fullName: req.body.fullName,
     address1: req.body.address1,
@@ -335,25 +335,25 @@ const createProfile = (req, res) =&gt; {
     preferences: req.body.preferences,
     availability: req.body.availability,
   };
-  profiles.push(profile);
-  res.status(201).json(profile);
+<span class="cstat-no" title="statement not covered" >  profiles.push(profile);</span>
+<span class="cstat-no" title="statement not covered" >  res.status(201).json(profile);</span>
 };
 &nbsp;
-const updateProfile = (req, res) =&gt; {
-  const profile = profiles.find(p =&gt; p.id === parseInt(req.params.id));
-  if (!profile) return res.status(404).send('Profile not found');
+const updateProfile = <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  const profile = <span class="cstat-no" title="statement not covered" >profiles.find(<span class="fstat-no" title="function not covered" >p </span>=&gt; <span class="cstat-no" title="statement not covered" >p.id === parseInt(req.params.id))</span>;</span>
+<span class="cstat-no" title="statement not covered" >  if (!profile) <span class="cstat-no" title="statement not covered" >return res.status(404).send('Profile not found');</span></span>
 &nbsp;
-  profile.fullName = req.body.fullName;
-  profile.address1 = req.body.address1;
-  profile.address2 = req.body.address2;
-  profile.city = req.body.city;
-  profile.state = req.body.state;
-  profile.zipCode = req.body.zipCode;
-  profile.skills = req.body.skills;
-  profile.preferences = req.body.preferences;
-  profile.availability = req.body.availability;
+<span class="cstat-no" title="statement not covered" >  profile.fullName = req.body.fullName;</span>
+<span class="cstat-no" title="statement not covered" >  profile.address1 = req.body.address1;</span>
+<span class="cstat-no" title="statement not covered" >  profile.address2 = req.body.address2;</span>
+<span class="cstat-no" title="statement not covered" >  profile.city = req.body.city;</span>
+<span class="cstat-no" title="statement not covered" >  profile.state = req.body.state;</span>
+<span class="cstat-no" title="statement not covered" >  profile.zipCode = req.body.zipCode;</span>
+<span class="cstat-no" title="statement not covered" >  profile.skills = req.body.skills;</span>
+<span class="cstat-no" title="statement not covered" >  profile.preferences = req.body.preferences;</span>
+<span class="cstat-no" title="statement not covered" >  profile.availability = req.body.availability;</span>
 &nbsp;
-  res.json(profile);
+<span class="cstat-no" title="statement not covered" >  res.json(profile);</span>
 };
 /*
 const deleteProfile = (req, res) =&gt; {
@@ -385,7 +385,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-20T04:15:18.110Z
+                at 2024-07-26T16:45:35.256Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

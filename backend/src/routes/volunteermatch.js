@@ -2,11 +2,19 @@ const express = require('express');
 const router = express.Router();
 const volunteermatchController = require('../controllers/volunteermatchController');
 
-// router.get('/', volunteermatchController.getAllEvents);
-router.get('/', volunteermatchController.getMatchedProfiles);
-router.get('/:id', volunteermatchController.getEventById);
+// Create a new volunteer match
 router.post('/', volunteermatchController.createEvent);
+
+// Get all matched profiles
+router.get('/', volunteermatchController.getMatchedProfiles);
+
+// Get an event by ID
+router.get('/:id', volunteermatchController.getEventById);
+
+// Update an event by ID
 router.put('/:id', volunteermatchController.updateEvent);
-router.delete('/:id', volunteermatchController.deleteEvent); 
+
+// Delete an event by ID
+router.delete('/:id', volunteermatchController.deleteEvent);
 
 module.exports = router;

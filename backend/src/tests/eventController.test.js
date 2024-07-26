@@ -1,126 +1,145 @@
 const request = require('supertest');
 const express = require('express');
-const bodyParser = require('body-parser');
-const eventRouter = require('../routes/event');
-const { resetEvents } = require('../controllers/eventController');
-
+const mongoose = require('mongoose');
 const app = express();
-app.use(bodyParser.json());
-app.use('/api/events', eventRouter);
+const EventDetails = require('../models/EventDetails');
+const eventController = require('../controllers/eventController'); // Adjust path as needed
 
-// Helper function to reset the events array
-const initialEvents = [
-  {
-    id: 1,
-    eventName: 'Beach Cleanup',
-    eventDescription: 'Join us for a beach cleanup event to help keep our beaches clean and beautiful.',
-    location: 'Santa Monica Beach, CA',
-    requiredSkills: ['Teamwork', 'Time Management'],
-    urgency: 'High',
-    eventDate: '2023-08-15',
-  },
-  {
-    id: 2,
-    eventName: 'Community Garden Planting',
-    eventDescription: 'Help us plant a new community garden and learn about sustainable gardening practices.',
-    location: 'Downtown Community Center, NY',
-    requiredSkills: ['Gardening', 'Teamwork', 'Creativity'],
-    urgency: 'Medium',
-    eventDate: '2023-09-20',
-  },
-  {
-    id: 3,
-    eventName: 'Food Drive',
-    eventDescription: 'Participate in our food drive to collect and distribute food to those in need.',
-    location: 'Local Food Bank, TX',
-    requiredSkills: ['Communication', 'Empathy'],
-    urgency: 'Low',
-    eventDate: '2023-10-10',
-  },
-];
+app.use(express.json());
+app.use('/api/events', require('../routes/event')); // Ensure this routes to your eventController
+
+beforeAll(async () => {
+  // Connect to a test database
+  await mongoose.connect('mongodb://localhost:27017/testdb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+});
+
+afterAll(async () => {
+  // Disconnect from test database
+  await mongoose.connection.close();
+});
+
+beforeEach(async () => {
+  // Clear the database before each test
+  await EventDetails.deleteMany({});
+});
 
 describe('Event Controller', () => {
-  beforeEach(() => {
-    resetEvents(initialEvents); // Reset events before each test
-  });
-
-  it('should get all events', async () => {
-    const response = await request(app).get('/api/events');
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(3); // Based on your initial events array
-  });
-
-  it('should get an event by ID', async () => {
-    const response = await request(app).get('/api/events/1');
-    expect(response.status).toBe(200);
-    expect(response.body.id).toBe(1);
-    expect(response.body.eventName).toBe('Beach Cleanup');
-  });
-
-  it('should return 404 for non-existing event ID', async () => {
-    const response = await request(app).get('/api/events/999');
-    expect(response.status).toBe(404);
-    expect(response.text).toBe('Event not found');
-  });
-
-  it('should create a new event', async () => {
-    const newEvent = {
-      eventName: 'Test Event',
-      eventDescription: 'Test event description',
-      location: 'Test Location',
-      requiredSkills: ['Test Skill'],
+  test('should create a new event successfully', async () => {
+    const eventData = {
+      eventName: 'Beach Cleanup',
+      eventDescription: 'Help clean up the beach.',
+      location: 'Santa Monica Beach',
+      requiredSkills: ['Teamwork'],
       urgency: 'High',
-      eventDate: '2023-12-31',
+      eventDate: '2023-08-15',
     };
+
     const response = await request(app)
       .post('/api/events')
-      .send(newEvent);
+      .send(eventData);
+
     expect(response.status).toBe(201);
-    expect(response.body.eventName).toBe(newEvent.eventName);
+    expect(response.body).toHaveProperty('eventName', 'Beach Cleanup');
+    expect(response.body).toHaveProperty('eventDescription', 'Help clean up the beach.');
   });
 
-  it('should update an existing event', async () => {
-    const updatedEvent = {
-      eventName: 'Updated Event',
-      eventDescription: 'Updated event description',
-      location: 'Updated Location',
-      requiredSkills: ['Updated Skill'],
-      urgency: 'Medium',
-      eventDate: '2024-01-01',
-    };
+  test('should get all events successfully', async () => {
+    await EventDetails.create({
+      eventName: 'Beach Cleanup',
+      eventDescription: 'Help clean up the beach.',
+      location: 'Santa Monica Beach',
+      requiredSkills: ['Teamwork'],
+      urgency: 'High',
+      eventDate: '2023-08-15',
+    });
+
     const response = await request(app)
-      .put('/api/events/1')
-      .send(updatedEvent);
+      .get('/api/events');
+
     expect(response.status).toBe(200);
-    expect(response.body.eventName).toBe(updatedEvent.eventName);
+    expect(response.body).toHaveLength(1);
   });
 
-  it('should return 404 for updating non-existing event', async () => {
-    const updatedEvent = {
-      eventName: 'Non-existing Event',
-      eventDescription: 'Non-existing event description',
-      location: 'Non-existing Location',
-      requiredSkills: ['Non-existing Skill'],
-      urgency: 'Low',
-      eventDate: '2024-01-01',
-    };
+  test('should get a single event by ID', async () => {
+    const event = await EventDetails.create({
+      eventName: 'Beach Cleanup',
+      eventDescription: 'Help clean up the beach.',
+      location: 'Santa Monica Beach',
+      requiredSkills: ['Teamwork'],
+      urgency: 'High',
+      eventDate: '2023-08-15',
+    });
+
     const response = await request(app)
-      .put('/api/events/999')
-      .send(updatedEvent);
-    expect(response.status).toBe(404);
-    expect(response.text).toBe('Event not found');
-  });
-/*
-  it('should delete an event', async () => {
-    const response = await request(app).delete('/api/events/1');
-    expect(response.status).toBe(200);
-    expect(response.body.eventName).toBe('Beach Cleanup');
-  }); 
+      .get(`/api/events/${event._id}`);
 
-  it('should return 404 for deleting non-existing event', async () => {
-    const response = await request(app).delete('/api/events/999');
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('eventName', 'Beach Cleanup');
+  });
+
+  test('should return 404 for non-existent event by ID', async () => {
+    const response = await request(app)
+      .get('/api/events/invalidid');
+
     expect(response.status).toBe(404);
-    expect(response.text).toBe('Event not found');
-  }); */
+    expect(response.body).toHaveProperty('message', 'Event not found');
+  });
+
+  test('should update an event by ID', async () => {
+    const event = await EventDetails.create({
+      eventName: 'Beach Cleanup',
+      eventDescription: 'Help clean up the beach.',
+      location: 'Santa Monica Beach',
+      requiredSkills: ['Teamwork'],
+      urgency: 'High',
+      eventDate: '2023-08-15',
+    });
+
+    const response = await request(app)
+      .put(`/api/events/${event._id}`)
+      .send({ eventName: 'Updated Event' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('eventName', 'Updated Event');
+  });
+
+  test('should return 404 for non-existent event update by ID', async () => {
+    const response = await request(app)
+      .put('/api/events/invalidid')
+      .send({ eventName: 'Updated Event' });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Event not found');
+  });
+
+  test('should delete an event by ID', async () => {
+    const event = await EventDetails.create({
+      eventName: 'Beach Cleanup',
+      eventDescription: 'Help clean up the beach.',
+      location: 'Santa Monica Beach',
+      requiredSkills: ['Teamwork'],
+      urgency: 'High',
+      eventDate: '2023-08-15',
+    });
+
+    const response = await request(app)
+      .delete(`/api/events/${event._id}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message', 'Event deleted');
+
+    const checkDeleted = await EventDetails.findById(event._id);
+    expect(checkDeleted).toBeNull();
+  });
+
+  test('should return 404 for non-existent event delete by ID', async () => {
+    const response = await request(app)
+      .delete('/api/events/invalidid');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Event not found');
+  });
 });
