@@ -1,22 +1,28 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
 require('dotenv').config();
 
-const authRoutes = require('./src/routes/auth');
-const profileRoutes = require('./src/routes/profile');
-const eventRoutes = require('./src/routes/event');
-const notificationRoutes = require('./src/routes/noti');
-
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:5173", // Adjust according to your frontend URL
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
-app.use(bodyParser.json());
-app.use(cors());
+// Middleware
+app.use(express.json()); // Built-in JSON parser
+app.use(cors({
+  origin: 'http://localhost:5173', // Specify your frontend's URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify the allowed headers
+  credentials: true // If you want to allow credentials (e.g., cookies, authorization headers)
+}));
 
 const mongoURI = process.env.MONGODB_URI;
 
@@ -27,10 +33,13 @@ if (!mongoURI) {
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
 }).then(() => console.log('MongoDB connected...'))
-  .catch(err => console.log(err));
+  .catch(err => console.error('MongoDB connection error:', err));
+
+const authRoutes = require('./src/routes/auth');
+const profileRoutes = require('./src/routes/profile');
+const eventRoutes = require('./src/routes/event');
+const notificationRoutes = require('./src/routes/noti');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);

@@ -4,25 +4,32 @@ import { faBell, faCircle } from '@fortawesome/free-solid-svg-icons';
 import io from 'socket.io-client';
 import './index.css';
 
-const socket = io('http://localhost:3000');
+// Initialize Socket.IO client
+const socket = io('http://localhost:3000', {
+  transports: ['websocket'], // Ensure WebSocket transport is used
+});
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Fetch notifications and set up socket listeners
   useEffect(() => {
     fetchNotifications();
 
+    // Listen for new notifications
     socket.on('new-notification', (notification) => {
       setNotifications((prevNotifications) => [notification, ...prevNotifications]);
     });
 
+    // Clean up socket listener on component unmount
     return () => {
       socket.off('new-notification');
     };
   }, []);
 
+  // Fetch notifications from the server
   const fetchNotifications = async () => {
     try {
       const response = await fetch('http://localhost:3000/api/notifications');
@@ -36,6 +43,7 @@ const Notifications = () => {
     }
   };
 
+  // Delete a notification
   const deleteNotification = async (id) => {
     try {
       const response = await fetch(`http://localhost:3000/api/notifications/${id}`, {
@@ -51,17 +59,20 @@ const Notifications = () => {
     }
   };
 
+  // Handle bell icon click
   const handleBellClick = () => {
     setShowNotifications(!showNotifications);
     acknowledgeNotifications();
   };
 
+  // Handle clicks outside the dropdown
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setShowNotifications(false);
     }
   };
 
+  // Acknowledge notifications when the bell is clicked
   const acknowledgeNotifications = () => {
     setNotifications((prevNotifications) =>
       prevNotifications.map((notification) => ({ ...notification, isNew: false }))

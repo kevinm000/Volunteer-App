@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css';
 
 const EventManage = () => {
@@ -59,7 +59,7 @@ const EventManage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/events', formData);
+      const response = await axios.post('http://localhost:3000/api/events/create', formData);
       alert('Event created successfully');
       setEvents([...events, response.data]);
       setFormData({
