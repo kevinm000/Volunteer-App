@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -16,7 +15,8 @@ const io = socketIo(server, {
   }
 });
 
-app.use(bodyParser.json());
+// Middleware
+app.use(express.json()); // Built-in JSON parser
 app.use(cors({
   origin: 'http://localhost:5173', // Specify your frontend's URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed HTTP methods
@@ -33,10 +33,8 @@ if (!mongoURI) {
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
 }).then(() => console.log('MongoDB connected...'))
-  .catch(err => console.log(err));
+  .catch(err => console.error('MongoDB connection error:', err));
 
 const authRoutes = require('./src/routes/auth');
 const profileRoutes = require('./src/routes/profile');
