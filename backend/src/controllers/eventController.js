@@ -1,7 +1,7 @@
+// eventController.js
 const EventDetails = require('../models/EventDetails');
-const { validationResult } = require('express-validator'); // Assuming you're using express-validator for input validation
+const { validationResult } = require('express-validator');
 
-// Create a new event
 const createEvent = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -28,7 +28,6 @@ const createEvent = async (req, res) => {
   }
 };
 
-// Get all events
 const getAllEvents = async (req, res) => {
   try {
     const events = await EventDetails.find();
@@ -39,7 +38,6 @@ const getAllEvents = async (req, res) => {
   }
 };
 
-// Get a single event by ID
 const getEventById = async (req, res) => {
   const { id } = req.params;
 
@@ -55,7 +53,6 @@ const getEventById = async (req, res) => {
   }
 };
 
-// Update an event by ID
 const updateEvent = async (req, res) => {
   const { id } = req.params;
   const { eventName, eventDescription, location, requiredSkills, urgency, eventDate } = req.body;
@@ -80,7 +77,6 @@ const updateEvent = async (req, res) => {
   }
 };
 
-// Delete an event by ID
 const deleteEvent = async (req, res) => {
   const { id } = req.params;
 
@@ -101,5 +97,5 @@ module.exports = {
   getAllEvents,
   getEventById,
   updateEvent,
-  deleteEvent
+  deleteEvent,
 };
