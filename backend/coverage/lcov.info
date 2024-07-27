@@ -1,5 +1,6 @@
 TN:
 SF:server.js
+<<<<<<< Updated upstream
 FN:26,(anonymous_0)
 FN:29,(anonymous_1)
 FN:34,(anonymous_2)
@@ -7,6 +8,17 @@ FN:44,(anonymous_3)
 FNF:4
 FNH:1
 FNDA:0,(anonymous_0)
+=======
+FN:36,(anonymous_0)
+FN:37,(anonymous_1)
+FN:51,(anonymous_2)
+FN:54,(anonymous_3)
+FN:59,(anonymous_4)
+FN:69,(anonymous_5)
+FNF:6
+FNH:2
+FNDA:2,(anonymous_0)
+>>>>>>> Stashed changes
 FNDA:0,(anonymous_1)
 FNDA:0,(anonymous_2)
 FNDA:1,(anonymous_3)
@@ -33,9 +45,15 @@ DA:26,1
 DA:27,0
 DA:29,0
 DA:30,0
+<<<<<<< Updated upstream
 DA:34,1
 DA:35,0
 DA:36,0
+=======
+DA:31,0
+DA:35,3
+DA:36,2
+>>>>>>> Stashed changes
 DA:37,0
 DA:39,0
 DA:41,0
