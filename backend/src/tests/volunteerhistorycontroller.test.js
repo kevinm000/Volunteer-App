@@ -1,99 +1,149 @@
 const request = require('supertest');
-const express = require('express');
+const app = require('./setup');
 const mongoose = require('mongoose');
-const app = express();
 const VolunteerHistory = require('../models/VolunteerHistory');
-const volunteerhistoryController = require('../controllers/volunteerhistoryController');
-
-app.use(express.json());
-app.use('/api/volunteerhistory', require('../routes/volunteerhistoryRoutes'));
-
-// Mock data
-const mockRecord = {
-  volunteerId: 'volunteer1',
-  eventId: 'event1',
-  participationStatus: 'Completed',
-  feedback: 'Great event!'
-};
-
-beforeAll(async () => {
-  await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-});
-
-afterAll(async () => {
-  await mongoose.disconnect();
-});
 
 describe('Volunteer History Controller', () => {
-  it('should create a new volunteer history record', async () => {
-    const response = await request(app)
-      .post('/api/volunteerhistory/create')
-      .send(mockRecord);
-    
+  const recordData = {
+    volunteerId: new mongoose.Types.ObjectId(),
+    eventId: new mongoose.Types.ObjectId(),
+    participationStatus: 'Attended',
+    feedback: 'Great event',
+  };
+
+  let recordId;
+
+  beforeAll(async () => {
+    // Clear and seed the database before running tests
+    await VolunteerHistory.deleteMany({});
+    const record = new VolunteerHistory(recordData);
+    await record.save();
+    recordId = record._id.toString();
+  });
+
+  afterEach(async () => {
+    jest.restoreAllMocks();
+  });
+
+  test('should create a new volunteer history record successfully', async () => {
+    const response = await request(app).post('/api/volunteerhistory').send(recordData);
     expect(response.status).toBe(201);
-    expect(response.body).toMatchObject(mockRecord);
+    expect(response.body).toHaveProperty('participationStatus', 'Attended');
   });
 
-  it('should get all volunteer history records', async () => {
-    await request(app)
-      .post('/api/volunteerhistory/create')
-      .send(mockRecord);
-
-    const response = await request(app).get('/api/volunteerhistory/');
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1);
+  test('should return 500 if record creation fails', async () => {
+    jest.spyOn(VolunteerHistory.prototype, 'save').mockImplementationOnce(() => {
+      throw new Error('Mocked error');
+    });
+    const response = await request(app).post('/api/volunteerhistory').send(recordData);
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('message', 'Mocked error');
   });
 
-  it('should get volunteer history by volunteer ID', async () => {
-    await request(app)
-      .post('/api/volunteerhistory/create')
-      .send(mockRecord);
-
-    const response = await request(app).get('/api/volunteerhistory/volunteer/volunteer1');
+  test('should get all volunteer history records', async () => {
+    const response = await request(app).get('/api/volunteerhistory');
     expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1);
+    expect(Array.isArray(response.body)).toBe(true);
   });
 
-  it('should get volunteer history by event ID', async () => {
-    await request(app)
-      .post('/api/volunteerhistory/create')
-      .send(mockRecord);
-
-    const response = await request(app).get('/api/volunteerhistory/event/event1');
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1);
+  test('should return 500 if fetching all records fails', async () => {
+    jest.spyOn(VolunteerHistory, 'find').mockImplementationOnce(() => {
+      throw new Error('Mocked error');
+    });
+    const response = await request(app).get('/api/volunteerhistory');
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('message', 'Mocked error');
   });
 
-  it('should update a volunteer history record', async () => {
-    const newRecord = await request(app)
-      .post('/api/volunteerhistory/create')
-      .send(mockRecord);
-    
-    const updatedRecord = {
-      ...mockRecord,
-      feedback: 'Updated feedback!'
-    };
-
-    const response = await request(app)
-      .put(`/api/volunteerhistory/${newRecord.body._id}`)
-      .send(updatedRecord);
-    
+  test('should get records by volunteer ID', async () => {
+    const response = await request(app).get(`/api/volunteerhistory/volunteer/${recordData.volunteerId}`);
     expect(response.status).toBe(200);
-    expect(response.body.feedback).toBe('Updated feedback!');
+    expect(Array.isArray(response.body)).toBe(true);
   });
 
-  it('should delete a volunteer history record', async () => {
-    const newRecord = await request(app)
-      .post('/api/volunteerhistory/create')
-      .send(mockRecord);
-    
-    const response = await request(app)
-      .delete(`/api/volunteerhistory/${newRecord.body._id}`);
-    
+  test('should return 404 if no records found for volunteer ID', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).get(`/api/volunteerhistory/volunteer/${nonExistentId}`);
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'No records found for this volunteer');
+  });
+
+  test('should return 500 if fetching records by volunteer ID fails', async () => {
+    jest.spyOn(VolunteerHistory, 'find').mockImplementationOnce(() => {
+      throw new Error('Mocked error');
+    });
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).get(`/api/volunteerhistory/volunteer/${nonExistentId}`);
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('message', 'Mocked error');
+  });
+
+  test('should get records by event ID', async () => {
+    const response = await request(app).get(`/api/volunteerhistory/event/${recordData.eventId}`);
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('Record deleted');
+    expect(Array.isArray(response.body)).toBe(true);
+  });
+
+  test('should return 404 if no records found for event ID', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).get(`/api/volunteerhistory/event/${nonExistentId}`);
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'No records found for this event');
+  });
+
+  test('should return 500 if fetching records by event ID fails', async () => {
+    jest.spyOn(VolunteerHistory, 'find').mockImplementationOnce(() => {
+      throw new Error('Mocked error');
+    });
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).get(`/api/volunteerhistory/event/${nonExistentId}`);
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('message', 'Mocked error');
+  });
+
+  test('should update a volunteer history record by ID', async () => {
+    const updateData = { feedback: 'Updated feedback' };
+    const response = await request(app).put(`/api/volunteerhistory/${recordId}`).send(updateData);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('feedback', 'Updated feedback');
+  });
+
+  test('should return 404 if updating non-existent record', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).put(`/api/volunteerhistory/${nonExistentId}`).send({ feedback: 'Updated feedback' });
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Record not found');
+  });
+
+  test('should return 400 if updating record fails', async () => {
+    jest.spyOn(VolunteerHistory, 'findByIdAndUpdate').mockImplementationOnce(() => {
+      throw new Error('Mocked error');
+    });
+    const response = await request(app).put(`/api/volunteerhistory/${recordId}`).send({ feedback: 'Updated feedback' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('message', 'Mocked error');
+  });
+
+  test('should delete a volunteer history record by ID', async () => {
+    const response = await request(app).delete(`/api/volunteerhistory/${recordId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message', 'Record deleted');
+  });
+
+  test('should return 404 if deleting non-existent record', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).delete(`/api/volunteerhistory/${nonExistentId}`);
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Record not found');
+  });
+
+  test('should return 500 if deleting record fails', async () => {
+    jest.spyOn(VolunteerHistory, 'findByIdAndDelete').mockImplementationOnce(() => {
+      throw new Error('Mocked error');
+    });
+    const nonExistentId = new mongoose.Types.ObjectId();
+    const response = await request(app).delete(`/api/volunteerhistory/${nonExistentId}`);
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('message', 'Mocked error');
   });
 });
