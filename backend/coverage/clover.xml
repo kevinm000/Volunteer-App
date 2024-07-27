@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1722058003585" clover="3.2.0">
-  <project timestamp="1722058003585" name="All files">
-    <metrics statements="200" coveredstatements="159" conditionals="24" coveredconditionals="14" methods="22" coveredmethods="15" elements="246" coveredelements="188" complexity="0" loc="200" ncloc="200" packages="4" files="12" classes="12"/>
+<coverage generated="1722056866286" clover="3.2.0">
+  <project timestamp="1722056866286" name="All files">
+    <metrics statements="248" coveredstatements="204" conditionals="40" coveredconditionals="28" methods="53" coveredmethods="37" elements="341" coveredelements="269" complexity="0" loc="248" ncloc="248" packages="3" files="13" classes="13"/>
     <package name="backend">
       <metrics statements="40" coveredstatements="28" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="1"/>
       <file name="server.js" path="C:\Users\K\Documents\GitHub\Volunteer-App\backend\server.js">
