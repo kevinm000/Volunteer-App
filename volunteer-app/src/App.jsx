@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
@@ -13,19 +12,23 @@ import ProtectedRoute from './ProtectedRoute'; // Create this component for rout
 import Registration from './Registration';
 import VolunteerHistory from './VolunteerHistory';
 import VolunteerMatching from './VolunteerMatching';
-import ProfileManage from './profileManage'; // Adjusted import to match file name
+import ProfileManage from './profileManage';
+import AllEvents from './AllEvents';
+import Navigation from './Navigation';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Header />
+        <Navigation />
         <div className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/all-events" element={<AllEvents />} />
             <Route path="/event-management" element={<EventManage />} />
             
             {/* Protected Routes */}
@@ -48,7 +51,7 @@ function App() {
             <Route 
               path="/notifications" 
               element={
-                  <Notifications />
+                <Notifications />
               } 
             />
             <Route 

@@ -1,1 +1,47 @@
 GET http://localhost:3000/posts
+
+# Fetch all events
+GET http://localhost:3000/api/volunteer-match/events
+Accept: application/json
+
+# Fetch all events
+GET http://localhost:3000/api/volunteer-match/events
+Accept: application/json
+
+###
+# Create a new event
+POST http://localhost:3000/api/volunteer-match/create
+Content-Type: application/json
+
+{
+  "eventName": "Community Cleanup",
+  "eventDescription": "Join us for a community cleanup event.",
+  "location": "Central Park",
+  "requiredSkills": ["Teamwork", "Physical Stamina"],
+  "urgency": "Medium",
+  "eventDate": "2024-09-01T10:00:00.000Z"
+}
+
+###
+# Get an event by ID
+GET http://localhost:3000/api/volunteer-match/{66a3dd4d378cd44f43ac0a13}
+Accept: application/json
+
+###
+# Update an event by ID
+PUT http://localhost:3000/api/volunteer-match/{id}
+Content-Type: application/json
+
+{
+  "eventName": "Updated Event Name",
+  "eventDescription": "Updated event description.",
+  "location": "Updated Location",
+  "requiredSkills": ["Updated Skill"],
+  "urgency": "High",
+  "eventDate": "2024-09-01T10:00:00.000Z"
+}
+
+###
+# Delete an event by ID
+DELETE http://localhost:3000/api/volunteer-match/{id}
+Accept: application/json

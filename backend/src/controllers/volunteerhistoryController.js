@@ -1,5 +1,5 @@
 const VolunteerHistory = require('../models/VolunteerHistory');
-const Event = require('../models/Event'); // Assuming you have an Event model
+const EventDetails = require('../models/EventDetails'); // Updated to use correct model name
 const UserProfile = require('../models/UserProfile'); // Assuming you need this for user details
 
 // Create a new volunteer history record
@@ -13,7 +13,7 @@ const createRecord = async (req, res) => {
     }
 
     // Check if volunteer and event exist
-    const event = await Event.findById(eventId);
+    const event = await EventDetails.findById(eventId);
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }

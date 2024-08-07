@@ -1,24 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const volunteerhistoryController = require('../controllers/volunteerhistoryController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { createEvent, getAllEvents, getMatchedProfiles, getEventById, updateEvent, deleteEvent } = require('../controllers/volunteermatchController');
+const { createRecord, getAllRecords, getRecordsByVolunteerId, getRecordsByEventId, updateRecord, deleteRecord } = require('../controllers/volunteerHistoryController');
 
-// Create a new volunteer history record
-router.post('/create', authMiddleware, volunteerhistoryController.createRecord); // Add authMiddleware
+// Fetch all events
+router.get('/api/volunteer-match/events', getAllEvents);
 
-// Get all volunteer history records
-router.get('/', authMiddleware, volunteerhistoryController.getAllRecords); // Add authMiddleware
+// Add an event to volunteer history
+router.post('/api/volunteer-history', createRecord);
 
-// Get volunteer history by volunteer ID
-router.get('/volunteer/:id', authMiddleware, volunteerhistoryController.getRecordsByVolunteerId); // Add authMiddleware
-
-// Get volunteer history by event ID
-router.get('/event/:id', authMiddleware, volunteerhistoryController.getRecordsByEventId); // Add authMiddleware
-
-// Update a volunteer history record by ID
-router.put('/:id', authMiddleware, volunteerhistoryController.updateRecord); // Add authMiddleware
-
-// Delete a volunteer history record by ID
-router.delete('/:id', authMiddleware, volunteerhistoryController.deleteRecord); // Add authMiddleware
+// Other routes
+router.post('/api/volunteer-match/create', createEvent);
+router.get('/api/volunteer-match/:id', getEventById);
+router.put('/api/volunteer-match/:id', updateEvent);
+router.delete('/api/volunteer-match/:id', deleteEvent);
 
 module.exports = router;
