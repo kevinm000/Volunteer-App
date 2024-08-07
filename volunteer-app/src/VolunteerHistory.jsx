@@ -1,38 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 import './index.css';
 
 const VolunteerHistory = () => {
-  // Mock data for volunteer history
-  const mockVolunteerHistory = [
-    {
-      volunteerName: 'John Doe',
-      eventName: 'Community Clean-Up',
-      eventDescription: 'Cleaning up the local park',
-      location: 'Central Park',
-      requiredSkills: ['Teamwork', 'Communication'],
-      urgency: 'Medium',
-      eventDate: '2023-06-15',
-      participationStatus: 'Attended'
-    },
-    {
-      volunteerName: 'Jane Smith',
-      eventName: 'Food Drive',
-      eventDescription: 'Collecting and distributing food to the needy',
-      location: 'Downtown Community Center',
-      requiredSkills: ['Organizing', 'Empathy'],
-      urgency: 'High',
-      eventDate: '2023-06-20',
-      participationStatus: 'Attended'
-    },
-   
-  ];
-
+  const { user } = useAuth(); // Get user data from context
   const [volunteerHistory, setVolunteerHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Using mock data instead of fetching from backend
-    setVolunteerHistory(mockVolunteerHistory);
-  }, []);
+    const fetchVolunteerHistory = async () => {
+      try {
+        if (!user || !user.token) {
+          throw new Error('User not authenticated');
+        }
+
+        const response = await axios.get('http://localhost:3000/api/volunteer-history', {
+          headers: { Authorization: `Bearer ${user.token}` } // Use the token from context
+        });
+
+        setVolunteerHistory(response.data);
+      } catch (err) {
+        setError('Failed to fetch volunteer history');
+        console.error('Error fetching volunteer history:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVolunteerHistory();
+  }, [user]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="volunteer-history-container">
@@ -40,7 +41,6 @@ const VolunteerHistory = () => {
       <table className="volunteer-history-table">
         <thead>
           <tr>
-            <th>Volunteer Name</th>
             <th>Event Name</th>
             <th>Event Description</th>
             <th>Location</th>
@@ -53,7 +53,6 @@ const VolunteerHistory = () => {
         <tbody>
           {volunteerHistory.map((history, index) => (
             <tr key={index}>
-              <td>{history.volunteerName}</td>
               <td>{history.eventName}</td>
               <td>{history.eventDescription}</td>
               <td>{history.location}</td>

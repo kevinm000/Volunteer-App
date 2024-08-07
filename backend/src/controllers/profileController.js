@@ -1,23 +1,15 @@
 const UserProfile = require('../models/UserProfile');
+const UserCredentials = require('../models/UserCredentials');
 
-// Create a new user profile
-const createProfile = async (req, res) => {
-  try {
-    const userProfile = new UserProfile(req.body);
-    await userProfile.save();
-    res.status(201).json(userProfile);
-  } catch (error) {
-    console.error('Error creating profile:', error);
-    res.status(400).json({ message: error.message });
-  }
-};
-
-// Get user profile by ID
+// Get user profile by ID (ensure the user is authenticated and authorized)
 const getProfileById = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const userProfile = await UserProfile.findById(req.params.id);
+    // Fetch user profile
+    const userProfile = await UserProfile.findOne({ userId: id });
     if (!userProfile) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User profile not found' });
     }
     res.status(200).json(userProfile);
   } catch (error) {
@@ -27,6 +19,5 @@ const getProfileById = async (req, res) => {
 };
 
 module.exports = {
-  createProfile,
   getProfileById
 };

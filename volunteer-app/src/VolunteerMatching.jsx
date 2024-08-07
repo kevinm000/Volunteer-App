@@ -10,7 +10,6 @@ const VolunteerMatching = () => {
 
   // Fetch volunteers from the database
   useEffect(() => {
-    // Replace with actual API call
     fetch('/api/volunteers')
       .then(response => response.json())
       .then(data => setVolunteers(data))
