@@ -1,41 +1,74 @@
-
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Home';
-import Header from './Header';
-import Login from './Login';
-import Registration from './Registration';
-import Footer from './Footer';
-import Profile from './Profile';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import EventManage from './EventManage';
-import VolunteerMatching from './VolunteerMatching';
+import Footer from './Footer';
+import Header from './Header';
+import Home from './Home';
+import Login from './Login';
 import Notifications from './Notifications';
+import Profile from './Profile';
+import ProtectedRoute from './ProtectedRoute'; // Create this component for route protection
+import Registration from './Registration';
 import VolunteerHistory from './VolunteerHistory';
+import VolunteerMatching from './VolunteerMatching';
 import ProfileManage from './profileManage';
+import AllEvents from './AllEvents';
+import Navigation from './Navigation';
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <div className="main-content">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/profile" element={<Profile />} />
-        {/* Define other routes here */}
-        <Route path="/event-management" element={<EventManage />} />
-        <Route path="/profile-management" element={<ProfileManage />} />
-        <Route path="/volunteer-matching" element={<VolunteerMatching />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/volunteer-history" element={<VolunteerHistory />} />
-
-
-      </Routes>
-      </div>
-      <Footer/>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <Navigation />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/all-events" element={<AllEvents />} />
+            <Route path="/event-management" element={<EventManage />} />
+            
+            {/* Protected Routes */}
+            <Route 
+              path="/profile-management" 
+              element={
+                <ProtectedRoute>
+                  <ProfileManage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/volunteer-matching" 
+              element={
+                <ProtectedRoute>
+                  <VolunteerMatching />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/notifications" 
+              element={
+                <Notifications />
+              } 
+            />
+            <Route 
+              path="/volunteer-history" 
+              element={
+                <ProtectedRoute>
+                  <VolunteerHistory />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </div>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 
 export default App;
+

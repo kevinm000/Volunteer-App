@@ -1,10 +1,29 @@
 const VolunteerHistory = require('../models/VolunteerHistory');
+const EventDetails = require('../models/EventDetails'); // Updated to use correct model name
+const UserProfile = require('../models/UserProfile'); // Assuming you need this for user details
 
 // Create a new volunteer history record
 const createRecord = async (req, res) => {
   const { volunteerId, eventId, participationStatus, feedback } = req.body;
 
   try {
+    // Validate input data
+    if (!volunteerId || !eventId) {
+      return res.status(400).json({ message: 'Volunteer ID and Event ID are required' });
+    }
+
+    // Check if volunteer and event exist
+    const event = await EventDetails.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    const volunteerProfile = await UserProfile.findById(volunteerId);
+    if (!volunteerProfile) {
+      return res.status(404).json({ message: 'Volunteer not found' });
+    }
+
+    // Create a new record
     const newRecord = new VolunteerHistory({
       volunteerId,
       eventId,
@@ -23,7 +42,9 @@ const createRecord = async (req, res) => {
 // Get all volunteer history records
 const getAllRecords = async (req, res) => {
   try {
-    const records = await VolunteerHistory.find().populate('volunteerId').populate('eventId');
+    const records = await VolunteerHistory.find()
+      .populate('volunteerId', 'fullName') // Only populate needed fields
+      .populate('eventId', 'eventName'); // Only populate needed fields
     res.status(200).json(records);
   } catch (error) {
     console.error('Error fetching records:', error);
@@ -33,8 +54,12 @@ const getAllRecords = async (req, res) => {
 
 // Get volunteer history by volunteer ID
 const getRecordsByVolunteerId = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const records = await VolunteerHistory.find({ volunteerId: req.params.id }).populate('eventId');
+    const records = await VolunteerHistory.find({ volunteerId: id })
+      .populate('eventId', 'eventName'); // Only populate needed fields
+
     if (!records.length) {
       return res.status(404).json({ message: 'No records found for this volunteer' });
     }
@@ -47,8 +72,12 @@ const getRecordsByVolunteerId = async (req, res) => {
 
 // Get volunteer history by event ID
 const getRecordsByEventId = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const records = await VolunteerHistory.find({ eventId: req.params.id }).populate('volunteerId');
+    const records = await VolunteerHistory.find({ eventId: id })
+      .populate('volunteerId', 'fullName'); // Only populate needed fields
+
     if (!records.length) {
       return res.status(404).json({ message: 'No records found for this event' });
     }
@@ -61,8 +90,12 @@ const getRecordsByEventId = async (req, res) => {
 
 // Update a volunteer history record by ID
 const updateRecord = async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
   try {
-    const updatedRecord = await VolunteerHistory.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedRecord = await VolunteerHistory.findByIdAndUpdate(id, updates, { new: true });
+
     if (!updatedRecord) {
       return res.status(404).json({ message: 'Record not found' });
     }
@@ -75,8 +108,11 @@ const updateRecord = async (req, res) => {
 
 // Delete a volunteer history record by ID
 const deleteRecord = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const deletedRecord = await VolunteerHistory.findByIdAndDelete(req.params.id);
+    const deletedRecord = await VolunteerHistory.findByIdAndDelete(id);
+
     if (!deletedRecord) {
       return res.status(404).json({ message: 'Record not found' });
     }

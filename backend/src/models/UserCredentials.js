@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // UserCredentials Schema
 const userCredentialsSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
 });
 
 // Pre-save hook to hash the password before saving

@@ -1,4 +1,5 @@
 const VolunteerMatch = require('../models/VolunteerMatch'); // Ensure this is your MongoDB model
+const EventDetails = require('../models/EventDetails'); // Ensure this is your MongoDB model
 
 // Create a new volunteer match
 const createEvent = async (req, res) => {
@@ -22,6 +23,17 @@ const createEvent = async (req, res) => {
   }
 };
 
+// Get all events
+const getAllEvents = async (req, res) => {
+  try {
+    const events = await EventDetails.find();
+    res.status(200).json(events);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get all matched profiles
 const getMatchedProfiles = async (req, res) => {
   try {
@@ -36,7 +48,7 @@ const getMatchedProfiles = async (req, res) => {
 // Get an event by ID
 const getEventById = async (req, res) => {
   try {
-    const event = await VolunteerMatch.findById(req.params.id);
+    const event = await EventDetails.findById(req.params.id);
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
@@ -50,7 +62,7 @@ const getEventById = async (req, res) => {
 // Update an event by ID
 const updateEvent = async (req, res) => {
   try {
-    const updatedEvent = await VolunteerMatch.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedEvent = await EventDetails.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedEvent) {
       return res.status(404).json({ message: 'Event not found' });
     }
@@ -64,7 +76,7 @@ const updateEvent = async (req, res) => {
 // Delete an event by ID
 const deleteEvent = async (req, res) => {
   try {
-    const deletedEvent = await VolunteerMatch.findByIdAndDelete(req.params.id);
+    const deletedEvent = await EventDetails.findByIdAndDelete(req.params.id);
     if (!deletedEvent) {
       return res.status(404).json({ message: 'Event not found' });
     }
@@ -77,6 +89,7 @@ const deleteEvent = async (req, res) => {
 
 module.exports = {
   createEvent,
+  getAllEvents, // Add this line
   getMatchedProfiles,
   getEventById,
   updateEvent,

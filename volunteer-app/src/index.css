@@ -270,6 +270,17 @@ button:focus-visible {
   margin-bottom: 1.5rem;
 }
 
+.form-title2 {
+  font-size: 1.5rem;
+  color: transparent; /* Text color is transparent to show the gradient */
+  background: linear-gradient(to right, #242424, #242424); /* Gradient colors */
+  background-clip: text; /* Clip the background to the text */
+  -webkit-background-clip: text; /* For WebKit-based browsers (fallback) */
+  display: inline; /* Ensures the text is treated as an inline element */
+  margin-bottom: 1.5rem;
+}
+
+
 .form-group {
   margin-bottom: 1.5rem;
 }

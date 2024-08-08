@@ -1,4 +1,5 @@
 const UserCredentials = require('../models/UserCredentials');
+const UserProfile = require('../models/UserProfile'); // Import the UserProfile model
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -14,9 +15,12 @@ const register = async (req, res) => {
     }
 
     // Create a new user
-    const newUser = new UserCredentials({
-      email,
-      password,
+    const newUser = new UserCredentials({ email, password });
+    await newUser.save();
+
+    // Create a new user profile
+    const userProfile = new UserProfile({
+      userId: newUser._id, // Link the profile to the new user
       fullName,
       address1,
       address2,
@@ -27,8 +31,8 @@ const register = async (req, res) => {
       preferences,
       availability
     });
+    await userProfile.save();
 
-    await newUser.save();
     res.status(201).json({ message: 'User registered successfully', user: newUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -57,20 +61,13 @@ const login = async (req, res) => {
       expiresIn: '1h'
     });
 
-    res.json({ token, message: 'Login successful' });
+    // Optionally include user profile information
+    const userProfile = await UserProfile.findOne({ userId: user._id });
+    res.json({ token, user: { email: user.email, profile: userProfile }, message: 'Login successful' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Reset users for testing purposes (not recommended for production)
-const resetUsers = async (newUsers) => {
-  try {
-    await UserCredentials.deleteMany({});
-    await UserCredentials.insertMany(newUsers);
-  } catch (error) {
-    console.error('Error resetting users:', error);
-  }
-};
 
-module.exports = { register, login, resetUsers };
+module.exports = { register, login };
