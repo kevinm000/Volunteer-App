@@ -37,24 +37,53 @@ export const AuthProvider = ({ children }) => {
   const fetchVolunteerHistory = async (userId) => {
     try {
       setLoadingHistory(true);
-      const response = await fetch(`/api/volunteer-history/volunteer/${userId}`, {
+  
+      // Fetching volunteer history by user ID
+      const response = await fetch('/api/volunteer-history', {
+        method: 'POST', // Use POST method
         headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
+          'Content-Type': 'application/json', // Set content type to JSON
+          'Authorization': `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ volunteerId: userId }), // Send volunteerId in the request body
       });
   
       if (!response.ok) {
         throw new Error('Failed to fetch volunteer history');
       }
   
-      const data = await response.json();
-      setVolunteerHistory(data);
+      const historyData = await response.json();
+  
+      // For each volunteer history entry, fetch the event details
+      const eventDetailsPromises = historyData.map(async (history) => {
+        const eventResponse = await fetch(`/api/volunteer-history/event/${history.eventId}`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+          },
+        });
+  
+        if (!eventResponse.ok) {
+          throw new Error(`Failed to fetch details for event ${history.eventId}`);
+        }
+  
+        const eventDetails = await eventResponse.json();
+        return {
+          ...history,
+          eventDetails, // Attach the fetched event details to each history entry
+        };
+      });
+  
+      const detailedHistoryData = await Promise.all(eventDetailsPromises);
+      setVolunteerHistory(detailedHistoryData);
+  
     } catch (error) {
       setErrorHistory(error.message);
     } finally {
       setLoadingHistory(false);
     }
   };
+  
+  
   
 
   return (

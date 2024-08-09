@@ -21,3 +21,4 @@ exports.deleteNotification = (req, res) => {
     res.status(404).json({ message: 'Notification not found' });
   }
 };
+

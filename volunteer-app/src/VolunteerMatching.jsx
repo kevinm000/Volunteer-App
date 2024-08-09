@@ -11,11 +11,7 @@ const VolunteerMatching = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user || !user.token) {
-      setError('User not authenticated');
-      setLoading(false);
-      return;
-    }
+    
 
     const fetchEvents = async () => {
       try {
@@ -44,7 +40,7 @@ const VolunteerMatching = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  //if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (

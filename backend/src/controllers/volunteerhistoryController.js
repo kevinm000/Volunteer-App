@@ -1,6 +1,7 @@
 const VolunteerHistory = require('../models/VolunteerHistory');
 const EventDetails = require('../models/EventDetails'); // Updated to use correct model name
 const UserProfile = require('../models/UserProfile'); // Assuming you need this for user details
+const mongoose = require('mongoose'); // Add this line to import mongoose
 
 const createRecord = async (req, res) => {
   const { eventId, feedback } = req.body;
@@ -48,13 +49,13 @@ const getAllRecords = async (req, res) => {
 };
 
 
-// Get volunteer history by volunteer ID
+// Fetch volunteer history by volunteer ID
 const getRecordsByVolunteerId = async (req, res) => {
-  const { id } = req.params;
+  const { volunteerId } = req.body; // Get volunteerId from request body
 
   try {
-    const records = await VolunteerHistory.find({ volunteerId: id })
-    .populate('eventId', 'eventName eventDescription location requiredSkills urgency eventDate');
+    const records = await VolunteerHistory.find({ volunteerId })
+      .populate('eventId', 'eventName eventDescription location requiredSkills urgency eventDate');
 
     if (!records.length) {
       return res.status(404).json({ message: 'No records found for this volunteer' });
@@ -66,23 +67,51 @@ const getRecordsByVolunteerId = async (req, res) => {
   }
 };
 
+
 // Get volunteer history by event ID
 const getRecordsByEventId = async (req, res) => {
   const { id } = req.params;
 
+  // Validate ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid event ID format' });
+  }
+
   try {
+    // Find records in VolunteerHistory for the given event ID
     const records = await VolunteerHistory.find({ eventId: id })
-      .populate('volunteerId', 'fullName'); // Only populate needed fields
+      .populate('volunteerId', 'fullName'); // Populate volunteerId with the fullName field
 
     if (!records.length) {
       return res.status(404).json({ message: 'No records found for this event' });
     }
-    res.status(200).json(records);
+
+    // Extract event IDs from the records
+    const eventIds = [...new Set(records.map(record => record.eventId.toString()))]; // Unique event IDs
+
+    // Fetch event details from EventDetails
+    const events = await EventDetails.find({ _id: { $in: eventIds } });
+
+    // Create a map of event details for quick lookup
+    const eventDetailsMap = events.reduce((map, event) => {
+      map[event._id.toString()] = event;
+      return map;
+    }, {});
+
+    // Attach event details to each record
+    const detailedRecords = records.map(record => ({
+      ...record.toObject(),
+      eventDetails: eventDetailsMap[record.eventId.toString()]
+    }));
+
+    res.status(200).json(detailedRecords);
   } catch (error) {
     console.error('Error fetching records by event ID:', error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 // Update a volunteer history record by ID
 const updateRecord = async (req, res) => {

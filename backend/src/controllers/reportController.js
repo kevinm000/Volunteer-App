@@ -18,15 +18,15 @@ const generateVolunteerReportPDF = async (req, res) => {
   doc.fontSize(16).text('Volunteer Report', { align: 'center' });
 
   volunteers.forEach((volunteer) => {
-    doc.fontSize(12).text(`Name: ${volunteer.name}`);
+    doc.fontSize(12).text(`Name: ${volunteer.fullName}`);
     doc.text(`Email: ${volunteer.email}`);
-    doc.text(`Phone: ${volunteer.phone}`);
+    doc.text(`Phone: ${volunteer.phone || 'N/A'}`);
 
     const history = volunteerHistory.filter(history => history.volunteerId._id.toString() === volunteer._id.toString());
     history.forEach(record => {
       doc.text(`Event: ${record.eventId.eventName}`);
       doc.text(`Status: ${record.participationStatus}`);
-      doc.text(`Feedback: ${record.feedback}`);
+      doc.text(`Feedback: ${record.feedback || 'N/A'}`);
     });
     doc.moveDown();
   });
@@ -57,7 +57,7 @@ const generateEventReportCSV = async (req, res) => {
     requiredSkills: event.requiredSkills.join(', '),
     urgency: event.urgency,
     eventDate: event.eventDate,
-    volunteerNames: event.volunteers.map(vol => vol.name).join(', ')
+    volunteerNames: event.volunteers.map(vol => vol.fullName).join(', ')
   }));
 
   await csvWriter.writeRecords(records);
