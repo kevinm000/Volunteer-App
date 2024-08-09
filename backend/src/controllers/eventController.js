@@ -1,6 +1,7 @@
-// eventController.js
 const EventDetails = require('../models/EventDetails');
 const { validationResult } = require('express-validator');
+const { sendNotification } = require('./notiController'); // Import the sendNotification function
+const UserProfile = require('../models/UserProfile'); // Import UserProfile to get all volunteers
 
 const createEvent = async (req, res) => {
   const errors = validationResult(req);
@@ -21,6 +22,16 @@ const createEvent = async (req, res) => {
     });
 
     await event.save();
+
+    // Fetch all volunteers
+    const volunteers = await UserProfile.find();
+
+    // Send notification to each volunteer
+    for (const volunteer of volunteers) {
+      const message = `A new event "${eventName}" has been created. Check it out!`;
+      sendNotification({ body: { volunteerId: volunteer.userId, message } }, { status: () => ({ json: () => {} }) }); // Simulate response
+    }
+
     res.status(201).json({ message: 'Event created successfully', event });
   } catch (error) {
     console.error('Error creating event:', error);

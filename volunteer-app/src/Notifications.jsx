@@ -18,7 +18,7 @@ const Notifications = () => {
   useEffect(() => {
     fetchNotifications();
 
-    // Listen for new notifications
+    // Listen for new notifications from the server
     socket.on('new-notification', (notification) => {
       setNotifications((prevNotifications) => [notification, ...prevNotifications]);
     });
