@@ -40,11 +40,17 @@ const authRoutes = require('./src/routes/auth');
 const profileRoutes = require('./src/routes/profile');
 const eventRoutes = require('./src/routes/event');
 const notificationRoutes = require('./src/routes/noti');
+const volunteermatchRoutes = require('./src/routes/volunteermatch');
+const volunteerhistoryRoutes = require('./src/routes/volunteerhistory');
+const reportRoutes = require('./src/routes/reportRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/volunteer-match', volunteermatchRoutes);
+app.use('/api/volunteer-history', volunteerhistoryRoutes);
+app.use('/api/reports', reportRoutes);
 
 const PORT = process.env.PORT || 3000;
 

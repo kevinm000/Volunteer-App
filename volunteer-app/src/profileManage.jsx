@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './index.css';
@@ -14,7 +14,7 @@ const ProfileManage = () => {
     zipCode: '',
     skills: [],
     preferences: '',
-    availability: [],
+    availability: [], // Initialize as an empty array
   });
 
   const skillsOptions = [
@@ -56,10 +56,23 @@ const ProfileManage = () => {
   };
 
   const handleDateChange = (dates) => {
-    setFormData({
-      ...formData,
-      availability: dates,
-    });
+    const [start, end] = dates;
+    if (start && end) {
+      setFormData({
+        ...formData,
+        availability: [start, end],
+      });
+    } else if (start) {
+      setFormData({
+        ...formData,
+        availability: [start],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        availability: [],
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -178,15 +191,14 @@ const ProfileManage = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="availability" className="form-label">Availability (required):</label>
+          <label htmlFor="availability" className="form-label">Availability:</label>
           <DatePicker
-            selected={formData.availability}
-            onChange={handleDateChange}
+            selected={formData.availability[0]}
             startDate={formData.availability[0]}
-            endDate={formData.availability[formData.availability.length - 1]}
+            endDate={formData.availability[1]}
+            onChange={handleDateChange}
             selectsRange
             inline
-            multiple
             isClearable
           />
         </div>

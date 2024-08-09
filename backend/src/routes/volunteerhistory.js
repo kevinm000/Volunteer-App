@@ -1,23 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const volunteerhistoryController = require('../controllers/volunteerhistoryController');
+const { createRecord, getAllRecords, getRecordsByVolunteerId, getRecordsByEventId, updateRecord, deleteRecord } = require('../controllers/volunteerHistoryController');
 
-// Create a new volunteer history record
-router.post('/create', volunteerhistoryController.createRecord);
-
-// Get all volunteer history records
-router.get('/', volunteerhistoryController.getAllRecords);
-
-// Get volunteer history by volunteer ID
-router.get('/volunteer/:id', volunteerhistoryController.getRecordsByVolunteerId);
-
-// Get volunteer history by event ID
-router.get('/event/:id', volunteerhistoryController.getRecordsByEventId);
-
-// Update a volunteer history record by ID
-router.put('/:id', volunteerhistoryController.updateRecord);
-
-// Delete a volunteer history record by ID
-router.delete('/:id', volunteerhistoryController.deleteRecord);
+// Define routes for volunteer history
+router.post('/', createRecord); // Remove `:volunteerId` from the route
+router.get('/', getAllRecords);
+router.get('/volunteer/:id', getRecordsByVolunteerId);
+router.get('/event/:id', getRecordsByEventId);
+router.put('/:id', updateRecord);
+router.delete('/:id', deleteRecord);
 
 module.exports = router;

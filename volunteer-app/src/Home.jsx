@@ -1,12 +1,19 @@
 import React from 'react';
-import './index.css';
+import { useAuth } from './AuthContext';
 
-function Home() {
+const Home = () => {
+  const { user } = useAuth();
+
   return (
-    <div className="home">
-      <h1 className="home-title">The Volunteer&trade;</h1>
+    <div>
+      {user ? (
+        <h1>Hello, {user.profile.fullName}</h1>
+      ) : (
+        <h1>Welcome to our Volunteer App</h1>
+      )}
     </div>
   );
-}
+};
 
 export default Home;
+

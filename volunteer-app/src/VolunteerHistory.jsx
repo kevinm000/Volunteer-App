@@ -1,38 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useAuth } from './AuthContext';
 import './index.css';
 
 const VolunteerHistory = () => {
-  // Mock data for volunteer history
-  const mockVolunteerHistory = [
-    {
-      volunteerName: 'John Doe',
-      eventName: 'Community Clean-Up',
-      eventDescription: 'Cleaning up the local park',
-      location: 'Central Park',
-      requiredSkills: ['Teamwork', 'Communication'],
-      urgency: 'Medium',
-      eventDate: '2023-06-15',
-      participationStatus: 'Attended'
-    },
-    {
-      volunteerName: 'Jane Smith',
-      eventName: 'Food Drive',
-      eventDescription: 'Collecting and distributing food to the needy',
-      location: 'Downtown Community Center',
-      requiredSkills: ['Organizing', 'Empathy'],
-      urgency: 'High',
-      eventDate: '2023-06-20',
-      participationStatus: 'Attended'
-    },
-   
-  ];
-
-  const [volunteerHistory, setVolunteerHistory] = useState([]);
+  const { user, volunteerHistory, fetchVolunteerHistory, loadingHistory, errorHistory } = useAuth();
 
   useEffect(() => {
-    // Using mock data instead of fetching from backend
-    setVolunteerHistory(mockVolunteerHistory);
-  }, []);
+    if (user && user.token) {
+      fetchVolunteerHistory(user._id); // Pass user ID to fetch history
+    }
+  }, [user, fetchVolunteerHistory]);
+
+  if (loadingHistory) return <p>Loading...</p>;
+  if (errorHistory) return <p>{errorHistory}</p>;
 
   return (
     <div className="volunteer-history-container">
@@ -40,7 +20,6 @@ const VolunteerHistory = () => {
       <table className="volunteer-history-table">
         <thead>
           <tr>
-            <th>Volunteer Name</th>
             <th>Event Name</th>
             <th>Event Description</th>
             <th>Location</th>
@@ -53,14 +32,13 @@ const VolunteerHistory = () => {
         <tbody>
           {volunteerHistory.map((history, index) => (
             <tr key={index}>
-              <td>{history.volunteerName}</td>
-              <td>{history.eventName}</td>
-              <td>{history.eventDescription}</td>
-              <td>{history.location}</td>
-              <td>{history.requiredSkills.join(', ')}</td>
-              <td>{history.urgency}</td>
-              <td>{history.eventDate}</td>
-              <td>{history.participationStatus}</td>
+              <td>{history.eventId.eventName || 'N/A'}</td>
+              <td>{history.eventId.eventDescription || 'N/A'}</td>
+              <td>{history.eventId.location || 'N/A'}</td>
+              <td>{Array.isArray(history.eventId.requiredSkills) ? history.eventId.requiredSkills.join(', ') : 'N/A'}</td>
+              <td>{history.eventId.urgency || 'N/A'}</td>
+              <td>{history.eventId.eventDate ? new Date(history.eventId.eventDate).toLocaleDateString() : 'N/A'}</td>
+              <td>{history.participationStatus || 'N/A'}</td>
             </tr>
           ))}
         </tbody>

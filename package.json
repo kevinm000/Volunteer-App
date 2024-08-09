@@ -5,7 +5,10 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "csv-writer": "^1.6.0",
+    "jwt-decode": "^4.0.0",
     "mongoose": "^8.5.1",
+    "pdfkit": "^0.15.0",
     "react-datepicker": "^7.3.0"
   }
 }
