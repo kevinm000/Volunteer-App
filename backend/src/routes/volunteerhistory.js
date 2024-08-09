@@ -1,18 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { createEvent, getAllEvents, getMatchedProfiles, getEventById, updateEvent, deleteEvent } = require('../controllers/volunteermatchController');
 const { createRecord, getAllRecords, getRecordsByVolunteerId, getRecordsByEventId, updateRecord, deleteRecord } = require('../controllers/volunteerHistoryController');
 
-// Fetch all events
-router.get('/api/volunteer-match/events', getAllEvents);
-
-// Add an event to volunteer history
-router.post('/api/volunteer-history', createRecord);
-
-// Other routes
-router.post('/api/volunteer-match/create', createEvent);
-router.get('/api/volunteer-match/:id', getEventById);
-router.put('/api/volunteer-match/:id', updateEvent);
-router.delete('/api/volunteer-match/:id', deleteEvent);
+// Define routes for volunteer history
+router.post('/', createRecord); // Remove `:volunteerId` from the route
+router.get('/', getAllRecords);
+router.get('/volunteer/:id', getRecordsByVolunteerId);
+router.get('/event/:id', getRecordsByEventId);
+router.put('/:id', updateRecord);
+router.delete('/:id', deleteRecord);
 
 module.exports = router;

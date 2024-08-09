@@ -26,6 +26,7 @@
     "jwt-decode": "^4.0.0",
     "mongoose": "^8.5.2",
     "nodemon": "3.1.4",
+    "readable-stream": "^4.5.2",
     "socket.io": "^4.7.5",
     "yup": "^1.4.0"
   },

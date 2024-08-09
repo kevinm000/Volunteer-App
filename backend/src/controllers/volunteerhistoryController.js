@@ -2,33 +2,28 @@ const VolunteerHistory = require('../models/VolunteerHistory');
 const EventDetails = require('../models/EventDetails'); // Updated to use correct model name
 const UserProfile = require('../models/UserProfile'); // Assuming you need this for user details
 
-// Create a new volunteer history record
 const createRecord = async (req, res) => {
-  const { volunteerId, eventId, participationStatus, feedback } = req.body;
+  const { eventId, feedback } = req.body;
+  const volunteerId = req.body.volunteerId; // Read from request body
 
   try {
     // Validate input data
-    if (!volunteerId || !eventId) {
-      return res.status(400).json({ message: 'Volunteer ID and Event ID are required' });
+    if (!eventId || !volunteerId) {
+      return res.status(400).json({ message: 'Event ID and Volunteer ID are required' });
     }
 
-    // Check if volunteer and event exist
+    // Check if event exists
     const event = await EventDetails.findById(eventId);
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
-    }
-
-    const volunteerProfile = await UserProfile.findById(volunteerId);
-    if (!volunteerProfile) {
-      return res.status(404).json({ message: 'Volunteer not found' });
     }
 
     // Create a new record
     const newRecord = new VolunteerHistory({
       volunteerId,
       eventId,
-      participationStatus,
-      feedback
+      participationStatus: 'Attended',
+      feedback: feedback || ''
     });
 
     await newRecord.save();
@@ -39,12 +34,12 @@ const createRecord = async (req, res) => {
   }
 };
 
-// Get all volunteer history records
+
 const getAllRecords = async (req, res) => {
   try {
     const records = await VolunteerHistory.find()
-      .populate('volunteerId', 'fullName') // Only populate needed fields
-      .populate('eventId', 'eventName'); // Only populate needed fields
+      .populate('volunteerId', 'fullName') // Populate fullName from UserProfile
+      .populate('eventId', 'eventName eventDescription location requiredSkills urgency eventDate'); // Populate all necessary fields from EventDetails
     res.status(200).json(records);
   } catch (error) {
     console.error('Error fetching records:', error);
@@ -52,13 +47,14 @@ const getAllRecords = async (req, res) => {
   }
 };
 
+
 // Get volunteer history by volunteer ID
 const getRecordsByVolunteerId = async (req, res) => {
   const { id } = req.params;
 
   try {
     const records = await VolunteerHistory.find({ volunteerId: id })
-      .populate('eventId', 'eventName'); // Only populate needed fields
+    .populate('eventId', 'eventName eventDescription location requiredSkills urgency eventDate');
 
     if (!records.length) {
       return res.status(404).json({ message: 'No records found for this volunteer' });

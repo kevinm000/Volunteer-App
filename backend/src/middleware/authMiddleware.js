@@ -1,35 +1,37 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const UserCredentials = require('../models/UserCredentials'); // Adjust path if necessary
 
-const authMiddleware = (req, res, next) => {
-  // Ensure JWT_SECRET is defined
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not defined in .env file');
-  }
-
-  // Log the Authorization header for debugging
-  console.log('Authorization Header:', req.headers['authorization']);
-
-  const authHeader = req.headers['authorization'] || req.headers['Authorization'];
-
-  if (!authHeader) {
-    return res.status(401).json({ message: 'Authorization header missing' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ message: 'Token missing' });
-  }
-
+const authenticateToken = async (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Authorization token is missing or invalid' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Token is missing' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+    const user = await UserCredentials.findById(decoded.id); // Fetch user from database
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    req.user = user; // Attach user info to request object
+    next(); // Proceed to the next middleware or route handler
   } catch (error) {
-    console.error('Token verification error:', error);
-    res.status(401).json({ message: 'Invalid token' });
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token has expired' });
+    }
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(403).json({ message: 'Token is invalid' });
+    }
+    console.error('Error in authenticateToken middleware:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-module.exports = authMiddleware;
+module.exports = authenticateToken;
