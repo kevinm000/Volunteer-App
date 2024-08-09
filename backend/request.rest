@@ -45,3 +45,5 @@ Content-Type: application/json
 # Delete an event by ID
 DELETE http://localhost:3000/api/volunteer-match/{id}
 Accept: application/json
+
+GET http://localhost:3000/api/volunteer-history/event/{eventId}
