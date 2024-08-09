@@ -16,7 +16,8 @@
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dependencies": "^0.0.1",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "pdfkit": "^0.15.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
