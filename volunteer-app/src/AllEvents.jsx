@@ -37,15 +37,13 @@ const AllEvents = () => {
 
   const handleParticipated = async (eventId) => {
     try {
-      if (!user || !user.token) {
-        throw new Error('User not authenticated');
-      }
+      
   
       // Prompt user for feedback
       const feedback = prompt('Please provide feedback (optional):');
   
       // Ensure `volunteerId` is defined and correct
-      const volunteerId = user._id;
+      const volunteerId = user.profile._id;
       if (!volunteerId) {
         throw new Error('User ID is missing');
       }

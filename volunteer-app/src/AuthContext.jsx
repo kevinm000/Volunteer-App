@@ -9,6 +9,9 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [volunteerHistory, setVolunteerHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [errorHistory, setErrorHistory] = useState(null);
 
   useEffect(() => {
     // Load user from localStorage if available
@@ -31,8 +34,31 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
+  const fetchVolunteerHistory = async (userId) => {
+    try {
+      setLoadingHistory(true);
+      const response = await fetch(`/api/volunteer-history/volunteer/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch volunteer history');
+      }
+  
+      const data = await response.json();
+      setVolunteerHistory(data);
+    } catch (error) {
+      setErrorHistory(error.message);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+  
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, volunteerHistory, fetchVolunteerHistory, loadingHistory, errorHistory }}>
       {children}
     </AuthContext.Provider>
   );

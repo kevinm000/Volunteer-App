@@ -1,39 +1,18 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import './index.css';
 
 const VolunteerHistory = () => {
-  const { user } = useAuth(); // Get user data from context
-  const [volunteerHistory, setVolunteerHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, volunteerHistory, fetchVolunteerHistory, loadingHistory, errorHistory } = useAuth();
 
   useEffect(() => {
-    const fetchVolunteerHistory = async () => {
-      try {
-        if (!user || !user.token) {
-          throw new Error('User not authenticated');
-        }
+    if (user && user.token) {
+      fetchVolunteerHistory(user._id); // Pass user ID to fetch history
+    }
+  }, [user, fetchVolunteerHistory]);
 
-        const response = await axios.get('http://localhost:3000/api/volunteer-history', {
-          headers: { Authorization: `Bearer ${user.token}` } // Use the token from context
-        });
-
-        setVolunteerHistory(response.data);
-      } catch (err) {
-        setError('Failed to fetch volunteer history');
-        console.error('Error fetching volunteer history:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVolunteerHistory();
-  }, [user]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loadingHistory) return <p>Loading...</p>;
+  if (errorHistory) return <p>{errorHistory}</p>;
 
   return (
     <div className="volunteer-history-container">
