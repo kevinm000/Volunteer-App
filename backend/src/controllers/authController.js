@@ -57,9 +57,7 @@ const login = async (req, res) => {
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h'
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Optionally include user profile information
     const userProfile = await UserProfile.findOne({ userId: user._id });
@@ -69,5 +67,25 @@ const login = async (req, res) => {
   }
 };
 
+// Get current user info
+const getCurrentUser = async (req, res) => {
+  try {
+    // Extract token from request header
+    const token = req.headers['authorization']?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Token missing' });
 
-module.exports = { register, login };
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await UserCredentials.findById(decoded.userId);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ email: user.email }); // Return relevant user info
+  } catch (error) {
+    console.error('Error in getCurrentUser:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+module.exports = { register, login, getCurrentUser};

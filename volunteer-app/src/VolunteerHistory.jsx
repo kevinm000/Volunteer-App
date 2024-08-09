@@ -53,13 +53,13 @@ const VolunteerHistory = () => {
         <tbody>
           {volunteerHistory.map((history, index) => (
             <tr key={index}>
-              <td>{history.eventName}</td>
-              <td>{history.eventDescription}</td>
-              <td>{history.location}</td>
-              <td>{history.requiredSkills.join(', ')}</td>
-              <td>{history.urgency}</td>
-              <td>{history.eventDate}</td>
-              <td>{history.participationStatus}</td>
+              <td>{history.eventId.eventName || 'N/A'}</td>
+              <td>{history.eventId.eventDescription || 'N/A'}</td>
+              <td>{history.eventId.location || 'N/A'}</td>
+              <td>{Array.isArray(history.eventId.requiredSkills) ? history.eventId.requiredSkills.join(', ') : 'N/A'}</td>
+              <td>{history.eventId.urgency || 'N/A'}</td>
+              <td>{history.eventId.eventDate ? new Date(history.eventId.eventDate).toLocaleDateString() : 'N/A'}</td>
+              <td>{history.participationStatus || 'N/A'}</td>
             </tr>
           ))}
         </tbody>

@@ -1,172 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from './AuthContext'; // Ensure this path is correct
 import './index.css';
 
 const VolunteerMatching = () => {
+  const { user } = useAuth();
   const [events, setEvents] = useState([]);
-  const [event, setEvent] = useState({
-    eventName: '',
-    eventDescription: '',
-    location: '',
-    requiredSkills: [],
-    urgency: '',
-    eventDate: '',
-  });
-  const [editingEventId, setEditingEventId] = useState(null);
-
-  // Fetch all events
-  const fetchEvents = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/volunteer-match');
-      setEvents(response.data);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-  };
-
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
-  };
-
-  // Handle form submit for creating/updating events
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingEventId) {
-        await axios.put(`http://localhost:3000/api/volunteer-match/${editingEventId}`, event);
-      } else {
-        await axios.post('http://localhost:3000/api/volunteer-match', event);
-      }
-      setEvent({
-        eventName: '',
-        eventDescription: '',
-        location: '',
-        requiredSkills: [],
-        urgency: '',
-        eventDate: '',
-      });
-      setEditingEventId(null);
-      fetchEvents();
-    } catch (error) {
-      console.error('Error saving event:', error);
-    }
-  };
-
-  // Handle edit event
-  const handleEdit = (eventToEdit) => {
-    setEvent(eventToEdit);
-    setEditingEventId(eventToEdit._id);
-  };
-
-  // Handle delete event
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/api/volunteer-match/${id}`);
-      fetchEvents();
-    } catch (error) {
-      console.error('Error deleting event:', error);
-    }
-  };
+  const [matchedVolunteers, setMatchedVolunteers] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchEvents();
-  }, []);
+    if (!user || !user.token) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
+    }
+
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/events', {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        setEvents(response.data);
+      } catch (error) {
+        setError('Failed to fetch events');
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents().finally(() => setLoading(false));
+  }, [user]);
+
+  const handleMatchVolunteers = async (eventId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/volunteer-matching/matched-profiles/${eventId}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setMatchedVolunteers(prev => ({ ...prev, [eventId]: response.data }));
+    } catch (error) {
+      console.error('Error matching volunteers:', error);
+      setError('Failed to match volunteers');
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="volunteer-matching-container">
-      <h2>Volunteer Matching</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="eventName">Event Name</label>
-          <input
-            id="eventName"
-            name="eventName"
-            type="text"
-            value={event.eventName}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="eventDescription">Event Description</label>
-          <input
-            id="eventDescription"
-            name="eventDescription"
-            type="text"
-            value={event.eventDescription}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="location">Location</label>
-          <input
-            id="location"
-            name="location"
-            type="text"
-            value={event.location}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="requiredSkills">Required Skills (comma-separated)</label>
-          <input
-            id="requiredSkills"
-            name="requiredSkills"
-            type="text"
-            value={event.requiredSkills.join(', ')}
-            onChange={(e) =>
-              setEvent((prevEvent) => ({
-                ...prevEvent,
-                requiredSkills: e.target.value.split(',').map(skill => skill.trim())
-              }))
-            }
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="urgency">Urgency</label>
-          <input
-            id="urgency"
-            name="urgency"
-            type="text"
-            value={event.urgency}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="eventDate">Event Date</label>
-          <input
-            id="eventDate"
-            name="eventDate"
-            type="date"
-            value={event.eventDate}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit">{editingEventId ? 'Update Event' : 'Create Event'}</button>
-      </form>
-      <div className="events-list">
-        <h3>All Events</h3>
-        <ul>
+      <h2>Event Volunteer Matching</h2>
+      <table className="events-table">
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Event Description</th>
+            <th>Location</th>
+            <th>Required Skills</th>
+            <th>Urgency</th>
+            <th>Event Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {events.map((event) => (
-            <li key={event._id}>
-              <h4>{event.eventName}</h4>
-              <p>{event.eventDescription}</p>
-              <p>Location: {event.location}</p>
-              <p>Required Skills: {event.requiredSkills.join(', ')}</p>
-              <p>Urgency: {event.urgency}</p>
-              <p>Date: {new Date(event.eventDate).toLocaleDateString()}</p>
-              <button onClick={() => handleEdit(event)}>Edit</button>
-              <button onClick={() => handleDelete(event._id)}>Delete</button>
-            </li>
+            <tr key={event._id}>
+              <td>{event.eventName}</td>
+              <td>{event.eventDescription}</td>
+              <td>{event.location}</td>
+              <td>{Array.isArray(event.requiredSkills) ? event.requiredSkills.join(', ') : 'N/A'}</td>
+              <td>{event.urgency}</td>
+              <td>{new Date(event.eventDate).toLocaleDateString()}</td>
+              <td>
+                <button onClick={() => handleMatchVolunteers(event._id)}>Match Volunteers</button>
+              </td>
+            </tr>
           ))}
-        </ul>
+        </tbody>
+      </table>
+
+      <div className="matched-volunteers-container">
+        <h3>Matched Volunteers</h3>
+        {Object.entries(matchedVolunteers).map(([eventId, volunteers]) => (
+          <div key={eventId} className="matched-volunteers-section">
+            <h4>Event ID: {eventId}</h4>
+            <ul>
+              {volunteers.map((volunteer) => (
+                <li key={volunteer._id}>
+                  {volunteer.fullName} - Skills: {volunteer.skills.join(', ')}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );

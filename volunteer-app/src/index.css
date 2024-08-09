@@ -265,7 +265,7 @@ button:focus-visible {
   font-size: 1.5rem;
   color: #fff;
   background: -webkit-linear-gradient(#242424, #242424);
-  -webkit-background-clip: text;
+  
   -webkit-text-fill-color: transparent;
   margin-bottom: 1.5rem;
 }
@@ -402,7 +402,6 @@ button:focus-visible {
 
 
 /* src/index.css */
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
 
 body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

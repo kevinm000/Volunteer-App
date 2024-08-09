@@ -24,19 +24,17 @@ function App() {
         <Navigation />
         <div className="main-content">
           <Routes>
-            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/all-events" element={<AllEvents />} />
             <Route path="/event-management" element={<EventManage />} />
             
             {/* Protected Routes */}
             <Route 
-              path="/profile-management" 
+              path="/" 
               element={
                 <ProtectedRoute>
-                  <ProfileManage />
+                  <Home />
                 </ProtectedRoute>
               } 
             />
@@ -48,7 +46,15 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            <Route 
+            <Route
+              path="/all-events" 
+              element={
+                <ProtectedRoute>
+                  <AllEvents />
+                </ProtectedRoute>
+              } 
+            />
+            <Route
               path="/notifications" 
               element={
                 <Notifications />

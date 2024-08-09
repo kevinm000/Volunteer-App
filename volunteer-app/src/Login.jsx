@@ -1,3 +1,4 @@
+// login.jsx
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +37,7 @@ const Login = () => {
       const { token, user } = response.data; // Expecting token and user data
       localStorage.setItem('token', token); // Save token in local storage
       login(user); // Store user data in context
-      navigate('/volunteer-history'); // Redirect to Volunteer History page after successful login
+      navigate('/'); // Redirect to Home page after successful login
     } catch (error) {
       alert('Login failed: ' + (error.response ? error.response.data.message : error.message));
     } finally {
