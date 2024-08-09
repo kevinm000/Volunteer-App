@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -41,13 +42,24 @@ const Home = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+=======
+import React from 'react';
+import { useAuth } from './AuthContext';
+
+const Home = () => {
+  const { user } = useAuth();
+>>>>>>> juan
 
   return (
     <div>
       {user ? (
+<<<<<<< HEAD
         <h1>Welcome Back, {profile ? profile.fullName : 'Loading...'}</h1>
+=======
+        <h1>Hello, {user.profile.fullName}</h1>
+>>>>>>> juan
       ) : (
-        <h1>Please Log In</h1>
+        <h1>Welcome to our Volunteer App</h1>
       )}
     </div>
   );
