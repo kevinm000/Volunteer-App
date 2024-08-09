@@ -43,52 +43,7 @@ const AppContent = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
-<<<<<<< HEAD
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/event-management" element={<EventManage />} />
-            
-            {/* Protected Routes */}
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/volunteer-matching" 
-              element={
-                <ProtectedRoute>
-                  <VolunteerMatching />
-                </ProtectedRoute>
-              } 
-            />
-            <Route
-              path="/all-events" 
-              element={
-                <ProtectedRoute>
-                  <AllEvents />
-                </ProtectedRoute>
-              } 
-            />
-            <Route
-              path="/notifications" 
-              element={
-                <Notifications />
-              } 
-            />
-            <Route 
-              path="/volunteer-history" 
-              element={
-                <ProtectedRoute>
-                  <VolunteerHistory />
-                </ProtectedRoute>
-              } 
-            />
-=======
             <Route path="*" element={<Login />} />
->>>>>>> juan
           </Routes>
         )}
       </div>

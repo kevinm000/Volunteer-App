@@ -11,25 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-<<<<<<< HEAD
-    const token = localStorage.getItem('token');
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    if (token && storedUser) {
-      // Validate token and fetch user profile
-      axios.get('http://localhost:3000/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(response => {
-        // Token is valid, use the fetched user data
-        setUser({ ...storedUser, token });
-      })
-      .catch(() => {
-        // Token or user info is invalid
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      });
-=======
     // Load user from localStorage if available
     const token = localStorage.getItem('token');
     if (token) {
@@ -38,33 +19,15 @@ export const AuthProvider = ({ children }) => {
       })
       .then(response => setUser(response.data))
       .catch(() => localStorage.removeItem('token'));
->>>>>>> juan
     }
   }, []);
 
   const login = (userData) => {
-    const { token, ...userInfo } = userData; // Separate token from user info
-
-    // Debugging: Check if token and userInfo are correct
-    console.log('Login Token:', token);
-    console.log('Login User Info:', userInfo);
-
-    // Set user state with token
-    setUser({ ...userInfo, token });
-
-    // Store user info without token
-    localStorage.setItem('user', JSON.stringify(userInfo));
-
-    // Store token separately
-    localStorage.setItem('token', token);
+    setUser(userData);
   };
 
   const logout = () => {
     setUser(null);
-<<<<<<< HEAD
-    localStorage.removeItem('user');
-=======
->>>>>>> juan
     localStorage.removeItem('token');
   };
 
