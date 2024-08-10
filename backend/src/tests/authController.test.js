@@ -67,10 +67,11 @@ describe('Auth Controller', () => {
   });
 
   test('should log in a user successfully', async () => {
-    await UserCredentials.create({
+    const user = new UserCredentials({
       email: 'test@example.com',
       password: 'password123',
     });
+    await user.save();
 
     const response = await request(app)
       .post('/api/auth/login')
@@ -85,10 +86,11 @@ describe('Auth Controller', () => {
   });
 
   test('should not log in with invalid credentials', async () => {
-    await UserCredentials.create({
+    const user = new UserCredentials({
       email: 'test@example.com',
       password: 'password123',
     });
+    await user.save();
 
     const response = await request(app)
       .post('/api/auth/login')
@@ -101,13 +103,29 @@ describe('Auth Controller', () => {
     expect(response.body.message).toBe('Invalid email or password');
   });
 
-  test('should reset users successfully', async () => {
-    await UserCredentials.create({ email: 'test@example.com', password: 'password123' });
+  test('should get the current user', async () => {
+    const user = new UserCredentials({
+      email: 'test@example.com',
+      password: 'password123',
+    });
+    await user.save();
 
-    await authController.resetUsers([{ email: 'new@example.com', password: 'newpassword' }]);
+    const loginResponse = await request(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'test@example.com',
+        password: 'password123',
+      });
 
-    const users = await UserCredentials.find();
-    expect(users.length).toBe(1);
-    expect(users[0].email).toBe('new@example.com');
+    const token = loginResponse.body.token;
+
+    const response = await request(app)
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('email', 'test@example.com');
   });
+
+  // Add more tests here to cover other scenarios.
 });

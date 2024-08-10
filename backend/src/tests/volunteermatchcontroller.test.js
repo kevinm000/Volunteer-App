@@ -1,116 +1,285 @@
-const request = require('supertest');
-const express = require('express');
-const mongoose = require('mongoose');
-const app = express();
+const { 
+  matchVolunteers, 
+  getMatchedVolunteers, 
+  createEvent, 
+  getAllEvents, 
+  getMatchedProfiles, 
+  getEventById, 
+  updateEvent, 
+  deleteEvent 
+} = require('../controllers/volunteermatchController');
+
 const VolunteerMatch = require('../models/VolunteerMatch');
-const volunteermatchRoutes = require('../routes/volunteermatchRoutes');
+const UserProfile = require('../models/UserProfile');
+const EventDetails = require('../models/EventDetails');
 
-app.use(express.json());
-app.use('/api/volunteermatch', volunteermatchRoutes);
+jest.mock('../models/VolunteerMatch');
+jest.mock('../models/UserProfile');
+jest.mock('../models/EventDetails');
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+describe('volunteermatchController', () => {
+
+  describe('matchVolunteers', () => {
+    it('should throw an error if the event is not found', async () => {
+      EventDetails.findById.mockResolvedValue(null);
+
+      await expect(matchVolunteers('nonExistentId')).rejects.toThrow('Event not found');
+    });
+
+    it('should return matched volunteers based on skills and availability', async () => {
+      const mockEvent = {
+        requiredSkills: ['skill1', 'skill2'],
+        eventDate: new Date('2023-08-09')
+      };
+      const mockVolunteers = [
+        {
+          skills: ['skill1', 'skill2'],
+          availability: [new Date('2023-08-09')]
+        },
+        {
+          skills: ['skill1'],
+          availability: [new Date('2023-08-09')]
+        },
+        {
+          skills: ['skill1', 'skill2'],
+          availability: [new Date('2023-08-10')]
+        }
+      ];
+
+      EventDetails.findById.mockResolvedValue(mockEvent);
+      UserProfile.find.mockResolvedValue(mockVolunteers);
+
+      const result = await matchVolunteers('eventId');
+      expect(result).toEqual([mockVolunteers[0]]);
+    });
   });
-});
 
-afterAll(async () => {
-  await mongoose.disconnect();
-});
+  describe('getMatchedVolunteers', () => {
+    it('should return matched volunteers for a valid event ID', async () => {
+      const req = { params: { eventId: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-describe('Volunteer Match Controller', () => {
-  it('should create a new event', async () => {
-    const newEvent = {
-      eventName: 'Clean-Up Drive',
-      eventDescription: 'Community clean-up drive',
-      location: 'Central Park',
-      requiredSkills: ['Cleaning', 'Organization'],
-      urgency: 'High',
-      eventDate: '2024-08-15T10:00:00Z'
-    };
+      const mockMatchedVolunteers = [{ volunteer: 'volunteer1' }];
+      matchVolunteers.mockResolvedValue(mockMatchedVolunteers);
 
-    const response = await request(app)
-      .post('/api/volunteermatch')
-      .send(newEvent);
+      await getMatchedVolunteers(req, res);
 
-    expect(response.status).toBe(201);
-    expect(response.body).toMatchObject(newEvent);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockMatchedVolunteers);
+    });
+
+    it('should return an error if matching fails', async () => {
+      const req = { params: { eventId: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      matchVolunteers.mockRejectedValue(new Error('Matching failed'));
+
+      await getMatchedVolunteers(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Failed to match volunteers', error: 'Matching failed' });
+    });
   });
 
-  it('should get a single event by ID', async () => {
-    const newEvent = await request(app)
-      .post('/api/volunteermatch')
-      .send({
-        eventName: 'Food Drive',
-        eventDescription: 'Community food drive',
-        location: 'Downtown Hall',
-        requiredSkills: ['Packing', 'Distribution'],
-        urgency: 'Medium',
-        eventDate: '2024-08-20T10:00:00Z'
+  describe('createEvent', () => {
+    it('should create a new event', async () => {
+      const req = { body: { eventName: 'Event', eventDescription: 'Description', location: 'Location', requiredSkills: ['skill1'], urgency: 'high', eventDate: new Date('2023-08-09') } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockEvent = { save: jest.fn() };
+      VolunteerMatch.mockImplementation(() => mockEvent);
+
+      await createEvent(req, res);
+
+      expect(mockEvent.save).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(mockEvent);
+    });
+
+    it('should return an error if event creation fails', async () => {
+      const req = { body: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      VolunteerMatch.mockImplementation(() => {
+        throw new Error('Validation failed');
       });
 
-    const response = await request(app)
-      .get(`/api/volunteermatch/${newEvent.body._id}`);
+      await createEvent(req, res);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toMatchObject(newEvent.body);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Validation failed' });
+    });
   });
 
-  it('should update an event by ID', async () => {
-    const newEvent = await request(app)
-      .post('/api/volunteermatch')
-      .send({
-        eventName: 'Beach Cleanup',
-        eventDescription: 'Beach cleanup event',
-        location: 'Sunny Beach',
-        requiredSkills: ['Cleanup'],
-        urgency: 'Low',
-        eventDate: '2024-08-25T10:00:00Z'
-      });
+  describe('getAllEvents', () => {
+    it('should return all events', async () => {
+      const req = {};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-    const updatedEvent = {
-      eventName: 'Beach Cleanup Updated',
-      eventDescription: 'Updated beach cleanup event',
-      location: 'Sunny Beach',
-      requiredSkills: ['Cleanup'],
-      urgency: 'Medium',
-      eventDate: '2024-08-26T10:00:00Z'
-    };
+      const mockEvents = [{ eventName: 'Event1' }, { eventName: 'Event2' }];
+      EventDetails.find.mockResolvedValue(mockEvents);
 
-    const response = await request(app)
-      .put(`/api/volunteermatch/${newEvent.body._id}`)
-      .send(updatedEvent);
+      await getAllEvents(req, res);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toMatchObject(updatedEvent);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockEvents);
+    });
+
+    it('should return an error if fetching events fails', async () => {
+      const req = {};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.find.mockRejectedValue(new Error('Fetching failed'));
+
+      await getAllEvents(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Fetching failed' });
+    });
   });
 
-  it('should delete an event by ID', async () => {
-    const newEvent = await request(app)
-      .post('/api/volunteermatch')
-      .send({
-        eventName: 'Charity Run',
-        eventDescription: 'Charity run event',
-        location: 'City Center',
-        requiredSkills: ['Running', 'Cheering'],
-        urgency: 'High',
-        eventDate: '2024-08-30T10:00:00Z'
-      });
+  describe('getMatchedProfiles', () => {
+    it('should return all matched profiles', async () => {
+      const req = {};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-    const response = await request(app)
-      .delete(`/api/volunteermatch/${newEvent.body._id}`);
+      const mockMatchedProfiles = [{ profile: 'profile1' }];
+      VolunteerMatch.find.mockResolvedValue({ populate: jest.fn().mockResolvedValue(mockMatchedProfiles) });
 
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe('Event deleted');
+      await getMatchedProfiles(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockMatchedProfiles);
+    });
+
+    it('should return an error if fetching matched profiles fails', async () => {
+      const req = {};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      VolunteerMatch.find.mockResolvedValue({ populate: jest.fn().mockRejectedValue(new Error('Fetching failed')) });
+
+      await getMatchedProfiles(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Fetching failed' });
+    });
   });
 
-  it('should get all matched profiles', async () => {
-    const response = await request(app)
-      .get('/api/volunteermatch');
+  describe('getEventById', () => {
+    it('should return an event by ID', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
+      const mockEvent = { eventName: 'Event1' };
+      EventDetails.findById.mockResolvedValue(mockEvent);
+
+      await getEventById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockEvent);
+    });
+
+    it('should return an error if event not found', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findById.mockResolvedValue(null);
+
+      await getEventById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
+    });
+
+    it('should return an error if fetching event fails', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findById.mockRejectedValue(new Error('Fetching failed'));
+
+      await getEventById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Fetching failed' });
+    });
   });
+
+  describe('updateEvent', () => {
+    it('should update an event by ID', async () => {
+      const req = { params: { id: 'eventId' }, body: { eventName: 'Updated Event' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockUpdatedEvent = { eventName: 'Updated Event' };
+      EventDetails.findByIdAndUpdate.mockResolvedValue(mockUpdatedEvent);
+
+      await updateEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockUpdatedEvent);
+    });
+
+    it('should return an error if event not found for update', async () => {
+      const req = { params: { id: 'eventId' }, body: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndUpdate.mockResolvedValue(null);
+
+      await updateEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
+    });
+
+    it('should return an error if updating event fails', async () => {
+      const req = { params: { id: 'eventId' }, body: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndUpdate.mockRejectedValue(new Error('Updating failed'));
+
+      await updateEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Updating failed' });
+    });
+  });
+
+  describe('deleteEvent', () => {
+    it('should delete an event by ID', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockDeletedEvent = { eventName: 'Deleted Event' };
+      EventDetails.findByIdAndDelete.mockResolvedValue(mockDeletedEvent);
+
+      await deleteEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event deleted' });
+    });
+
+    it('should return an error if event not found for deletion', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndDelete.mockResolvedValue(null);
+
+      await deleteEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
+    });
+
+    it('should return an error if deleting event fails', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndDelete.mockRejectedValue(new Error('Deleting failed'));
+
+      await deleteEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Deleting failed' });
+    });
+  });
+
 });
-

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for routes/volunteerhistory.js</title>
+    <title>Code coverage report for models/UserProfile 3.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">routes</a> volunteerhistory.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> UserProfile 3.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -80,11 +80,10 @@
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -92,37 +91,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const express = require('express');
-const router = express.Router();
-const { 
-  createRecord, 
-  getAllRecords, 
-  getRecordsByVolunteerId, 
-  getRecordsByEventId, 
-  updateRecord, 
-  deleteRecord 
-} = require('../controllers/volunteerHistoryController');
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+const mongoose = <span class="cstat-no" title="statement not covered" >require('mongoose');</span>
 &nbsp;
-// Define routes for volunteer history
-router.post('/', createRecord); // Use `createRecord` function to create a new record
-router.get('/', getAllRecords); // Retrieves all volunteer history records
-router.get('/volunteer/:id', getRecordsByVolunteerId); // Retrieves records by volunteer ID
-router.get('/event/:id', getRecordsByEventId); // Retrieves records by event ID
-router.put('/:id', updateRecord); // Updates a record by ID
-router.delete('/:id', deleteRecord); // Deletes a record by ID
+const userProfileSchema = <span class="cstat-no" title="statement not covered" >new mongoose.Schema({</span>
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'UserCredentials', required: true },
+  fullName: { type: String, required: true, maxlength: 50 },
+  address1: { type: String, required: true, maxlength: 100 },
+  address2: { type: String, maxlength: 100 },
+  city: { type: String, required: true, maxlength: 100 },
+  state: { type: String, required: true, maxlength: 2 },
+  zipCode: { type: String, required: true, minlength: 5, maxlength: 9 },
+  skills: { type: [String], required: true },
+  preferences: { type: String, maxlength: 500 },
+  availability: { type: [Date], required: true }
+});
 &nbsp;
-module.exports = router;
+<span class="cstat-no" title="statement not covered" >module.exports = mongoose.model('UserProfile', userProfileSchema);</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -130,7 +121,7 @@ module.exports = router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-08-10T01:00:50.776Z
+                at 2024-08-10T00:24:35.593Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -3,6 +3,8 @@ const { createObjectCsvWriter } = require('csv-writer');
 const VolunteerHistory = require('../models/VolunteerHistory');
 const EventDetails = require('../models/EventDetails');
 const UserProfile = require('../models/UserProfile');
+const path = require('path');
+const fs = require('fs');
 
 const generateVolunteerReportPDF = async (req, res) => {
   const doc = new PDFDocument();
@@ -19,8 +21,6 @@ const generateVolunteerReportPDF = async (req, res) => {
 
   volunteers.forEach((volunteer) => {
     doc.fontSize(12).text(`Name: ${volunteer.fullName}`);
-    doc.text(`Email: ${volunteer.email}`);
-    doc.text(`Phone: ${volunteer.phone || 'N/A'}`);
 
     const history = volunteerHistory.filter(history => history.volunteerId._id.toString() === volunteer._id.toString());
     history.forEach(record => {
@@ -34,21 +34,25 @@ const generateVolunteerReportPDF = async (req, res) => {
   doc.end();
 };
 
+// Generate Event Report as CSV
 const generateEventReportCSV = async (req, res) => {
+  const filePath = path.join(__dirname, 'Event_Report.csv');
+  
   const csvWriter = createObjectCsvWriter({
-    path: 'Event_Report.csv',
+    path: filePath, // Path where the CSV file will be saved
     header: [
       { id: 'eventName', title: 'Event Name' },
       { id: 'eventDescription', title: 'Description' },
       { id: 'location', title: 'Location' },
       { id: 'requiredSkills', title: 'Required Skills' },
       { id: 'urgency', title: 'Urgency' },
-      { id: 'eventDate', title: 'Date' },
-      { id: 'volunteerNames', title: 'Volunteers' }
+      { id: 'eventDate', title: 'Date' }
+      // Add volunteerNames only if 'volunteers' exists in your schema
+      // { id: 'volunteerNames', title: 'Volunteers' }
     ]
   });
 
-  const events = await EventDetails.find().populate('volunteers');
+  const events = await EventDetails.find(); // Remove .populate('volunteers') if unnecessary
 
   const records = events.map(event => ({
     eventName: event.eventName,
@@ -57,11 +61,24 @@ const generateEventReportCSV = async (req, res) => {
     requiredSkills: event.requiredSkills.join(', '),
     urgency: event.urgency,
     eventDate: event.eventDate,
-    volunteerNames: event.volunteers.map(vol => vol.fullName).join(', ')
+    // Uncomment this line if 'volunteers' exists in your schema
+    // volunteerNames: event.volunteers.map(vol => vol.fullName).join(', ')
   }));
 
   await csvWriter.writeRecords(records);
-  res.download('Event_Report.csv');
+
+  // Set the correct headers and serve the file for download
+  res.setHeader('Content-disposition', 'attachment; filename=Event_Report.csv');
+  res.set('Content-Type', 'text/csv');
+
+  // Stream the file to the client
+  const fileStream = fs.createReadStream(filePath);
+  fileStream.pipe(res);
+
+  // Optionally, delete the file after sending
+  fileStream.on('end', () => {
+    fs.unlinkSync(filePath);
+  });
 };
 
 module.exports = {

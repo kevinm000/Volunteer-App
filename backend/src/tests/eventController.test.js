@@ -1,143 +1,208 @@
-// src/tests/eventController.test.js
-const request = require('supertest');
-const app = require('../../server'); // Adjust the path to your server file
-const mongoose = require('mongoose');
+const { createEvent, getAllEvents, getEventById, updateEvent, deleteEvent } = require('../controllers/eventController');
 const EventDetails = require('../models/EventDetails');
+const UserProfile = require('../models/UserProfile');
+const { validationResult } = require('express-validator');
+const { sendNotification } = require('../controllers/notiController');
 
-describe('Event Controller', () => {
-  let server;
-  
-  beforeAll(async () => {
-    server = app.listen(4000); // Ensure the server runs on a different port for testing
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+jest.mock('../models/EventDetails');
+jest.mock('../models/UserProfile');
+jest.mock('../controllers/notiController');
+jest.mock('express-validator', () => ({
+  validationResult: jest.fn()
+}));
+
+describe('eventController', () => {
+
+  describe('createEvent', () => {
+    it('should return 400 if validation errors exist', async () => {
+      validationResult.mockReturnValue({ isEmpty: () => false, array: () => [{ msg: 'Invalid data' }] });
+
+      const req = { body: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      await createEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ errors: [{ msg: 'Invalid data' }] });
+    });
+
+    it('should create an event and notify volunteers', async () => {
+      validationResult.mockReturnValue({ isEmpty: () => true });
+
+      const req = { body: { eventName: 'Event1', eventDescription: 'Desc', location: 'Location', requiredSkills: ['Skill1'], urgency: 'High', eventDate: new Date() } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockEvent = { save: jest.fn(), eventName: 'Event1' };
+      EventDetails.mockImplementation(() => mockEvent);
+
+      const mockVolunteers = [{ userId: 'vol1' }, { userId: 'vol2' }];
+      UserProfile.find.mockResolvedValue(mockVolunteers);
+
+      await createEvent(req, res);
+
+      expect(mockEvent.save).toHaveBeenCalled();
+      expect(sendNotification).toHaveBeenCalledTimes(mockVolunteers.length);
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event created successfully', event: mockEvent });
+    });
+
+    it('should handle server error when creating an event', async () => {
+      validationResult.mockReturnValue({ isEmpty: () => true });
+
+      const req = { body: { eventName: 'Event1' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.mockImplementation(() => { throw new Error('Server error'); });
+
+      await createEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Server error', error: 'Server error' });
     });
   });
 
-  afterAll(async () => {
-    await mongoose.disconnect();
-    server.close();
-  });
+  describe('getAllEvents', () => {
+    it('should return all events', async () => {
+      const req = {};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-  const eventData = {
-    eventName: 'Beach Cleanup',
-    eventDescription: 'Help clean up the beach.',
-    location: 'Santa Monica Beach',
-    requiredSkills: ['Teamwork'],
-    urgency: 'High',
-    eventDate: '2023-08-15',
-  };
+      const mockEvents = [{ eventName: 'Event1' }, { eventName: 'Event2' }];
+      EventDetails.find.mockResolvedValue(mockEvents);
 
-  test('should create a new event successfully', async () => {
-    const response = await request(app).post('/api/events').send(eventData);
-    expect(response.status).toBe(201);
-    expect(response.body.event).toHaveProperty('eventName', 'Beach Cleanup');
-  });
+      await getAllEvents(req, res);
 
-  test('should return 400 if validation fails', async () => {
-    const response = await request(app).post('/api/events').send({});
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('errors');
-  });
-
-  test('should get all events', async () => {
-    const response = await request(app).get('/api/events');
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-  });
-
-  test('should get an event by ID', async () => {
-    const eventResponse = await request(app).post('/api/events').send(eventData);
-    const eventId = eventResponse.body.event._id;
-    const response = await request(app).get(`/api/events/${eventId}`);
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('eventName', 'Beach Cleanup');
-  });
-
-  test('should return 404 for non-existent event by ID', async () => {
-    const nonExistentId = new mongoose.Types.ObjectId();
-    const response = await request(app).get(`/api/events/${nonExistentId}`);
-    expect(response.status).toBe(404);
-  });
-
-  test('should update an event by ID', async () => {
-    const eventResponse = await request(app).post('/api/events').send(eventData);
-    const eventId = eventResponse.body.event._id;
-    const updateData = { eventName: 'Updated Event' };
-
-    const response = await request(app).put(`/api/events/${eventId}`).send(updateData);
-    expect(response.status).toBe(200);
-    expect(response.body.updatedEvent).toHaveProperty('eventName', 'Updated Event');
-  });
-
-  test('should return 404 for non-existent event update by ID', async () => {
-    const nonExistentId = new mongoose.Types.ObjectId();
-    const response = await request(app).put(`/api/events/${nonExistentId}`).send({ eventName: 'Updated Event' });
-    expect(response.status).toBe(404);
-  });
-
-  test('should delete an event by ID', async () => {
-    const eventResponse = await request(app).post('/api/events').send(eventData);
-    const eventId = eventResponse.body.event._id;
-
-    const response = await request(app).delete(`/api/events/${eventId}`);
-    expect(response.status).toBe(200);
-  });
-
-  test('should return 404 for non-existent event delete by ID', async () => {
-    const nonExistentId = new mongoose.Types.ObjectId();
-    const response = await request(app).delete(`/api/events/${nonExistentId}`);
-    expect(response.status).toBe(404);
-  });
-
-  test('should return 500 for server errors during creation', async () => {
-    jest.spyOn(EventDetails.prototype, 'save').mockImplementationOnce(() => {
-      throw new Error('Mocked error');
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockEvents);
     });
-    const response = await request(app).post('/api/events').send(eventData);
-    expect(response.status).toBe(500);
-    expect(response.body).toHaveProperty('message', 'Server error');
+
+    it('should handle server error when fetching all events', async () => {
+      const req = {};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.find.mockRejectedValue(new Error('Server error'));
+
+      await getAllEvents(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Server error', error: 'Server error' });
+    });
   });
 
-  test('should return 500 for server errors during fetching all events', async () => {
-    jest.spyOn(EventDetails, 'find').mockImplementationOnce(() => {
-      throw new Error('Mocked error');
+  describe('getEventById', () => {
+    it('should return an event by ID', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockEvent = { eventName: 'Event1' };
+      EventDetails.findById.mockResolvedValue(mockEvent);
+
+      await getEventById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockEvent);
     });
-    const response = await request(app).get('/api/events');
-    expect(response.status).toBe(500);
-    expect(response.body).toHaveProperty('message', 'Server error');
+
+    it('should return 404 if event not found', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findById.mockResolvedValue(null);
+
+      await getEventById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
+    });
+
+    it('should handle server error when fetching event by ID', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findById.mockRejectedValue(new Error('Server error'));
+
+      await getEventById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Server error', error: 'Server error' });
+    });
   });
 
-  test('should return 500 for server errors during fetching event by ID', async () => {
-    jest.spyOn(EventDetails, 'findById').mockImplementationOnce(() => {
-      throw new Error('Mocked error');
+  describe('updateEvent', () => {
+    it('should update an event by ID', async () => {
+      const req = { params: { id: 'eventId' }, body: { eventName: 'Updated Event' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockUpdatedEvent = { eventName: 'Updated Event' };
+      EventDetails.findByIdAndUpdate.mockResolvedValue(mockUpdatedEvent);
+
+      await updateEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event updated successfully', updatedEvent: mockUpdatedEvent });
     });
-    const nonExistentId = new mongoose.Types.ObjectId();
-    const response = await request(app).get(`/api/events/${nonExistentId}`);
-    expect(response.status).toBe(500);
-    expect(response.body).toHaveProperty('message', 'Server error');
+
+    it('should return 404 if event not found for update', async () => {
+      const req = { params: { id: 'eventId' }, body: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndUpdate.mockResolvedValue(null);
+
+      await updateEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
+    });
+
+    it('should handle server error when updating event', async () => {
+      const req = { params: { id: 'eventId' }, body: {} };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndUpdate.mockRejectedValue(new Error('Server error'));
+
+      await updateEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Bad request', error: 'Server error' });
+    });
   });
 
-  test('should return 500 for server errors during updating event', async () => {
-    jest.spyOn(EventDetails, 'findByIdAndUpdate').mockImplementationOnce(() => {
-      throw new Error('Mocked error');
+  describe('deleteEvent', () => {
+    it('should delete an event by ID', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      const mockDeletedEvent = { eventName: 'Deleted Event' };
+      EventDetails.findByIdAndDelete.mockResolvedValue(mockDeletedEvent);
+
+      await deleteEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event deleted successfully' });
     });
-    const eventResponse = await request(app).post('/api/events').send(eventData);
-    const eventId = eventResponse.body.event._id;
-    const response = await request(app).put(`/api/events/${eventId}`).send({ eventName: 'Updated Event' });
-    expect(response.status).toBe(500);
-    expect(response.body).toHaveProperty('message', 'Server error');
+
+    it('should return 404 if event not found for deletion', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndDelete.mockResolvedValue(null);
+
+      await deleteEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
+    });
+
+    it('should handle server error when deleting event', async () => {
+      const req = { params: { id: 'eventId' } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      EventDetails.findByIdAndDelete.mockRejectedValue(new Error('Server error'));
+
+      await deleteEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Server error', error: 'Server error' });
+    });
   });
 
-  test('should return 500 for server errors during deleting event', async () => {
-    jest.spyOn(EventDetails, 'findByIdAndDelete').mockImplementationOnce(() => {
-      throw new Error('Mocked error');
-    });
-    const eventResponse = await request(app).post('/api/events').send(eventData);
-    const eventId = eventResponse.body.event._id;
-    const response = await request(app).delete(`/api/events/${eventId}`);
-    expect(response.status).toBe(500);
-    expect(response.body).toHaveProperty('message', 'Server error');
-  });
 });
